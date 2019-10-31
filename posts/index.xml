@@ -6,8 +6,54 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>ko-KR</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Thu, 31 Oct 2019 13:48:19 +0900</lastBuildDate>
+		<lastBuildDate>Thu, 31 Oct 2019 18:11:20 +0900</lastBuildDate>
 		<atom:link href="https://krespo.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Azkaban 설치</title>
+			<link>https://krespo.github.io/posts/azkaban/1-azkaban/</link>
+			<pubDate>Thu, 31 Oct 2019 18:11:20 +0900</pubDate>
+			
+			<guid>https://krespo.github.io/posts/azkaban/1-azkaban/</guid>
+			<description>준비 1. OpenJDK 설치 $ sudo yum install java-1.8.0-openjdk java-1.8.0-openjdk-devel $ readlink /etc/alternatives/java ##java 위치 확인 /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.222.b10-1.el7_7.x86_64/jre/bin/java ## 위 경로중 jre까지의 경로로 JAVA_HOME 환경변수를 잡아준다. $ echo &amp;#39;export JAVA_HOME=&amp;#34;/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.222.b10-1.el7_7.x86_64/jre&amp;#34;&amp;#39; &amp;gt;&amp;gt; ~/.bash_profile $ echo &amp;#39;export PATH=$PATH:$JAVA_HOME/bin:&amp;#39; &amp;gt;&amp;gt; ~/.bash_profile $ source ~/.bash_profile 준비 2. JavaFX 설치 Azk</description>
+			<content type="html"><![CDATA[
+
+<h3 id="준비-1-openjdk-설치">준비 1. OpenJDK 설치</h3>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ sudo yum install java-1.8.0-openjdk java-1.8.0-openjdk-devel
+$ readlink /etc/alternatives/java <span class="c1">##java 위치 확인</span>
+/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.222.b10-1.el7_7.x86_64/jre/bin/java
+
+<span class="c1">## 위 경로중 jre까지의 경로로 JAVA_HOME 환경변수를 잡아준다.</span>
+$ <span class="nb">echo</span> <span class="s1">&#39;export JAVA_HOME=&#34;/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.222.b10-1.el7_7.x86_64/jre&#34;&#39;</span> &gt;&gt; ~/.bash_profile
+$ <span class="nb">echo</span> <span class="s1">&#39;export PATH=$PATH:$JAVA_HOME/bin:&#39;</span> &gt;&gt; ~/.bash_profile
+$ <span class="nb">source</span> ~/.bash_profile</code></pre></div>
+<h3 id="준비-2-javafx-설치">준비 2. JavaFX 설치</h3>
+
+<p>Azkaban은 JavaFX 모듈의 클래스를 일부를 사용한다. 그렇기 때문에 JavaFX를 설치해 주어야 하는데, Oralce JDK는 JavaFX가 기본적으로 포함이 되어서 JavaFX를 설치 하지 않아도 되지만, OpenJDK는 JavaFX 모듈이 빠져있어, 추가적으로 설치해줘야 한다.</p>
+
+<ol>
+<li><a href="https://gluonhq.com/products/javafx/">https://gluonhq.com/products/javafx/</a> 에서 JavaFX Linux SDK LTS 버전 다운로드(현재 11.0.4 버전)</li>
+
+<li><p>아래의 커맨드를 이용하여 JavaFX모듈 복사</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ unzip openjfx-11.0.2_linux-x64_bin-sdk.zip
+$ <span class="nb">cd</span> javafx-sdk-11.0.1
+$ sudo cp -arf lib/* <span class="si">${</span><span class="nv">JAVA_HOME</span><span class="si">}</span>/lib/</code></pre></div></li>
+</ol>
+
+<h2 id="azkaban-설치">Azkaban 설치</h2>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ git clone https://github.com/azkaban/azkaban.git
+$ <span class="nb">cd</span> azkaban
+
+<span class="c1">##외부 네트웍이 차단되어있다면 gradle.properties를 수정하여 외부 접근 가능하도록 proxy 설정</span>
+$ vi gradle.properitese
+systemProp.http.proxyHost<span class="o">=</span>proxy.proxy.com
+systemProp.http.proxyPort<span class="o">=</span><span class="m">8888</span>
+systemProp.https.proxyHost<span class="o">=</span>proxy.proxy.com
+systemProp.https.proxyPort<span class="o">=</span><span class="m">8888</span>
+
+$ ./gradlew clean
+$ ./gradlew build installDist -x test</code></pre></div>]]></content>
+		</item>
 		
 		<item>
 			<title>My First Post</title>
