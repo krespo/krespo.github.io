@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Hugo Hermit</title>
-    <link>https://example.com/</link>
+    <link>https://krespo.github.io/</link>
     <description>Recent content on Hugo Hermit</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ko-KR</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
     <lastBuildDate>Thu, 31 Oct 2019 13:48:19 +0900</lastBuildDate>
     
-	<atom:link href="https://example.com/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://krespo.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>My First Post</title>
-      <link>https://example.com/posts/my-first-post/</link>
+      <link>https://krespo.github.io/posts/my-first-post/</link>
       <pubDate>Thu, 31 Oct 2019 13:48:19 +0900</pubDate>
       
-      <guid>https://example.com/posts/my-first-post/</guid>
+      <guid>https://krespo.github.io/posts/my-first-post/</guid>
       <description></description>
     </item>
     
