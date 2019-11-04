@@ -7,7 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ko-KR</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Mon, 04 Nov 2019 11:34:19 +0900</lastBuildDate>
+    <lastBuildDate>Mon, 04 Nov 2019 16:05:44 +0900</lastBuildDate>
     
 	<atom:link href="https://krespo.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -15,16 +15,25 @@
     <item>
       <title>airflow</title>
       <link>https://krespo.github.io/tags/airflow/</link>
-      <pubDate>Mon, 04 Nov 2019 11:34:19 +0900</pubDate>
+      <pubDate>Mon, 04 Nov 2019 16:05:44 +0900</pubDate>
       
       <guid>https://krespo.github.io/tags/airflow/</guid>
       <description></description>
     </item>
     
     <item>
+      <title>kerberos</title>
+      <link>https://krespo.github.io/tags/kerberos/</link>
+      <pubDate>Mon, 04 Nov 2019 16:05:44 +0900</pubDate>
+      
+      <guid>https://krespo.github.io/tags/kerberos/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>workflow</title>
       <link>https://krespo.github.io/tags/workflow/</link>
-      <pubDate>Mon, 04 Nov 2019 11:34:19 +0900</pubDate>
+      <pubDate>Mon, 04 Nov 2019 16:05:44 +0900</pubDate>
       
       <guid>https://krespo.github.io/tags/workflow/</guid>
       <description></description>

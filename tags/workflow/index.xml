@@ -7,13 +7,22 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ko-KR</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Mon, 04 Nov 2019 11:34:19 +0900</lastBuildDate>
+    <lastBuildDate>Mon, 04 Nov 2019 16:05:44 +0900</lastBuildDate>
     
 	<atom:link href="https://krespo.github.io/tags/workflow/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Airflow 설치</title>
+      <title>2. airflow 커버로스 설정</title>
+      <link>https://krespo.github.io/posts/airflow/kerberos-configuration/</link>
+      <pubDate>Mon, 04 Nov 2019 16:05:44 +0900</pubDate>
+      
+      <guid>https://krespo.github.io/posts/airflow/kerberos-configuration/</guid>
+      <description>airflow를 이용하여 kerberos 인증이 적용된 데이터소스(ex - hadoop)에 접근하려면 커버로스 설정을 airflow에 적용해야 한다. 아래의 예제는 kerberos</description>
+    </item>
+    
+    <item>
+      <title>1. Airflow 설치</title>
       <link>https://krespo.github.io/posts/airflow/1_airflow_install/</link>
       <pubDate>Mon, 04 Nov 2019 11:34:19 +0900</pubDate>
       
