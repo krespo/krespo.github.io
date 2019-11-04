@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>airflow on Hugo Hermit</title>
+    <link>https://krespo.github.io/tags/airflow/</link>
+    <description>Recent content in airflow on Hugo Hermit</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ko-KR</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Mon, 04 Nov 2019 11:34:19 +0900</lastBuildDate>
+    
+	<atom:link href="https://krespo.github.io/tags/airflow/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Airflow 설치</title>
+      <link>https://krespo.github.io/posts/airflow/1_airflow_install/</link>
+      <pubDate>Mon, 04 Nov 2019 11:34:19 +0900</pubDate>
+      
+      <guid>https://krespo.github.io/posts/airflow/1_airflow_install/</guid>
+      <description>설치 환경 CentOS 7.7 airflow 1.10.5 airflow는 단일 서버에서 설치하는 방법외에 python celery모듈을 이용하여 webserver와 worker서버를 분리 할수 있다.</description>
+    </item>
+    
+  </channel>
+</rss>
