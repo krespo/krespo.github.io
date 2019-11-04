@@ -340,15 +340,5 @@ $ ./gradlew build installDist -x <span class="nb">test</span>
 <span class="nb">cd</span> azkaban-solo-server/build/install/azkaban-solo-server<span class="p">;</span> bin/start-solo.sh</code></pre></div>]]></content>
 		</item>
 		
-		<item>
-			<title>My First Post</title>
-			<link>https://krespo.github.io/posts/my-first-post/</link>
-			<pubDate>Thu, 31 Oct 2019 13:48:19 +0900</pubDate>
-			
-			<guid>https://krespo.github.io/posts/my-first-post/</guid>
-			<description></description>
-			<content type="html"><![CDATA[]]></content>
-		</item>
-		
 	</channel>
 </rss>
