@@ -6,8 +6,35 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>ko-KR</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Mon, 04 Nov 2019 18:48:06 +0900</lastBuildDate>
+		<lastBuildDate>Thu, 07 Nov 2019 13:50:51 +0900</lastBuildDate>
 		<atom:link href="https://krespo.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Mysql 바이너리로그 끄고 켜기</title>
+			<link>https://krespo.github.io/posts/mysql/on-off-bin-log/</link>
+			<pubDate>Thu, 07 Nov 2019 13:50:51 +0900</pubDate>
+			
+			<guid>https://krespo.github.io/posts/mysql/on-off-bin-log/</guid>
+			<description>바이너리 로그는 master-slave 구성을 하거나, CDC를 할 때 사용하는데, 상황에 따라서 enable/disable 해야할 이슈가 있어 기록차원에서 남겨본다. 1.bin-log on $ vi /etc/my.cfg [mysqld] log-data=/data1/mysql/,ysql-bin $ sudo service mysql restart 2.bin-log off $ vi /etc/my.cfg</description>
+			<content type="html"><![CDATA[
+
+<p>바이너리 로그는 master-slave 구성을 하거나, <a href="https://en.wikipedia.org/wiki/Change_data_capture">CDC</a>를 할 때 사용하는데, 상황에 따라서 enable/disable 해야할 이슈가 있어 기록차원에서 남겨본다.</p>
+
+<h2 id="1-bin-log-on">1.bin-log on</h2>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ vi /etc/my.cfg
+
+<span class="o">[</span>mysqld<span class="o">]</span>
+log-data<span class="o">=</span>/data1/mysql/,ysql-bin
+
+$ sudo service mysql restart</code></pre></div>
+<h2 id="2-bin-log-off">2.bin-log off</h2>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ vi /etc/my.cfg
+
+<span class="c1">##주석처리</span>
+<span class="o">[</span>mysqld<span class="o">]</span>
+<span class="c1">#log-data=/data1/mysql/,ysql-bin</span>
+$ sudo service mysql restart</code></pre></div>]]></content>
+		</item>
 		
 		<item>
 			<title>3. Airflow Scheduler SPOF(Single Point Of Failure) 제거하기</title>
