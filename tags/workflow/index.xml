@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ko-KR</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Mon, 04 Nov 2019 18:48:06 +0900</lastBuildDate>
+    <lastBuildDate>Mon, 11 Nov 2019 16:34:10 +0900</lastBuildDate>
     
 	<atom:link href="https://krespo.github.io/tags/workflow/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>[Airflow] macOS catalina에서 hostname does not match this instance&#39;s hostname 해결하기</title>
+      <link>https://krespo.github.io/posts/airflow/hostname-error/</link>
+      <pubDate>Mon, 11 Nov 2019 16:34:10 +0900</pubDate>
+      
+      <guid>https://krespo.github.io/posts/airflow/hostname-error/</guid>
+      <description>얼마전 macOS Catalina버전으로 업그레이드 되면서 로컬에서 airflow가 정상적으로 동작하지 않는 문제가 생겼다. The recorded hostname [1m1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa[0m does not match this instance&amp;rsquo;s hostname [1m1.0.0.127.in-addr.arpa 위의 에러 메</description>
+    </item>
     
     <item>
       <title>3. Airflow Scheduler SPOF(Single Point Of Failure) 제거하기</title>
