@@ -6,8 +6,137 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>ko-KR</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Mon, 11 Nov 2019 16:34:10 +0900</lastBuildDate>
+		<lastBuildDate>Tue, 12 Nov 2019 13:23:33 +0900</lastBuildDate>
 		<atom:link href="https://krespo.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>[Airflow] SparkSubmitOperator를 이용한 spark 실행</title>
+			<link>https://krespo.github.io/posts/airflow/spark-submit-and-airflow/</link>
+			<pubDate>Tue, 12 Nov 2019 13:23:33 +0900</pubDate>
+			
+			<guid>https://krespo.github.io/posts/airflow/spark-submit-and-airflow/</guid>
+			<description>Airflow에서는 다양한 Operator를 지원하는데 그 중 Spark을 실행하기 위한 SparkSubmitOperator 라는 것이 존재한다. 이번에는 SparkSubmitOper</description>
+			<content type="html"><![CDATA[
+
+<p>Airflow에서는 다양한 Operator를 지원하는데 그 중 Spark을 실행하기 위한 <code>SparkSubmitOperator</code> 라는 것이 존재한다.
+이번에는 <code>SparkSubmitOperator</code>를 이용하여 spark application을 동작시켜보도록 하겠다.</p>
+
+<h2 id="사전작업">사전작업</h2>
+
+<p><code>SparkSubmitOperator</code>는 내부적으로 spark binary인 <code>spark-submit</code> 을 호출하는 방식으로 spark을 실행하고 있다. 그러므로 <a href="https://spark.apache.org/downloads.html">Apache spark</a> 에서 각자의 환경에 알맞은 spark을 각 <code>airflow worker</code>에 다운로드 한후 다운로드 경로를 <code>$SPARK_HOME</code>을 환경변수로 등록하고 <code>$SPARK_HOME/bin</code> 을 path에 추가한다.</p>
+
+<p>또한 필자는 yarn에 spark job을 동작시킬것임으로 <code>HADOOP_HOME(Hadoop Binary)</code>, <code>HADOOP_CONF_DIR(Hadoop 설정파일)</code> 등을 설정한다.</p>
+
+<h2 id="sparksubmitoperator-사용">SparkSubmitOperator 사용</h2>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">airflow</span> <span class="kn">import</span> <span class="n">DAG</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">airflow.contrib.operators.spark_submit_operator</span> <span class="kn">import</span> <span class="n">SparkSubmitOperator</span>
+
+
+<span class="n">default_args</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s1">&#39;retries&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s1">&#39;catchup&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+    <span class="s1">&#39;retry_delay&#39;</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="s1">&#39;sample_spark&#39;</span><span class="p">,</span> <span class="n">default_args</span><span class="o">=</span><span class="n">default_args</span><span class="p">,</span> <span class="n">schedule_interval</span><span class="o">=</span><span class="s2">&#34;@once&#34;</span><span class="p">)</span>
+
+<span class="n">spark_config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;conf&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&#34;spark.yarn.maxAppAttempts&#34;</span><span class="p">:</span> <span class="s2">&#34;1&#34;</span><span class="p">,</span>
+        <span class="s2">&#34;spark.yarn.executor.memoryOverhead&#34;</span><span class="p">:</span> <span class="s2">&#34;5120&#34;</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;conn_id&#39;</span><span class="p">:</span> <span class="s1">&#39;spark_option&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;application&#39;</span><span class="p">:</span> <span class="s1">&#39;/{실행하고자 하는 jar path}&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;driver_memory&#39;</span><span class="p">:</span> <span class="s2">&#34;2g&#34;</span><span class="p">,</span>
+    <span class="s1">&#39;executor_cores&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s1">&#39;num_executors&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s1">&#39;executor_memory&#39;</span><span class="p">:</span> <span class="s1">&#39;5g&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;keytab&#39;</span><span class="p">:</span> <span class="s1">&#39;/ketab/path&#39;</span><span class="p">,</span>            <span class="c1">## kerberos 인증이 필요하다면</span>
+    <span class="s1">&#39;principal&#39;</span><span class="p">:</span> <span class="s1">&#39;{keytab.principal}&#39;</span><span class="p">,</span>  <span class="c1">## kerberos 인증이 필요하다면</span>
+    <span class="s1">&#39;java_class&#39;</span><span class="p">:</span> <span class="s1">&#39;{jar파일 안에 포함된 main class}&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;driver_memory&#39;</span><span class="p">:</span> <span class="s1">&#39;3g&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">operator</span> <span class="o">=</span> <span class="n">SparkSubmitOperator</span><span class="p">(</span><span class="n">task_id</span><span class="o">=</span><span class="s1">&#39;spark_submit_task&#39;</span><span class="p">,</span> <span class="n">dag</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span> <span class="o">**</span><span class="n">spark_config</span><span class="p">)</span></code></pre></div>
+<p>위의 예시는 필요한 필부 설정만 작업한 것이고, 전체 파라미터를 보려면 <code>SparkSubmitOperator</code> 소스코드를 보는게 좋다. 아래는 실제 코드의 일부분이다.
+(좀더 상세한 옵션 예제는 <a href="https://github.com/apache/airflow/blob/master/tests/contrib/operators/test_spark_submit_operator.py">여기</a> 에서 확인하면 된다.)</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1">## airflow/contirb/operators/spark_submit_operator.py</span>
+<span class="nd">@apply_defaults</span>
+<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+     <span class="n">application</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+     <span class="n">conf</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+     <span class="n">conn_id</span><span class="o">=</span><span class="s1">&#39;spark_default&#39;</span><span class="p">,</span>
+     <span class="n">files</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+     <span class="n">py_files</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+     <span class="n">archives</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+     <span class="n">driver_class_path</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+     <span class="n">jars</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+     <span class="n">java_class</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+     <span class="n">packages</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+     <span class="n">exclude_packages</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+     <span class="n">repositories</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+     <span class="n">total_executor_cores</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+     <span class="n">executor_cores</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+     <span class="n">executor_memory</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+     <span class="n">driver_memory</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+     <span class="n">keytab</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+     <span class="n">principal</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+     <span class="n">proxy_user</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+     <span class="n">name</span><span class="o">=</span><span class="s1">&#39;airflow-spark&#39;</span><span class="p">,</span>
+     <span class="n">num_executors</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+     <span class="n">application_args</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+     <span class="n">env_vars</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+     <span class="n">verbose</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+     <span class="n">spark_binary</span><span class="o">=</span><span class="s2">&#34;spark-submit&#34;</span><span class="p">,</span>
+     <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+     <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></code></pre></div>
+<p>그런데 DAG를 생성하다보니 특이한점이 보였다. 바로 spark-submit 시 필요한 Argument인 <code>--master</code> <code>--deploy-mode</code> <code>--queue</code> 등을 옵션으로 넘겨줄 수 없다는것인데, 이를 해결하기 위해 관련 코드를 열어보았다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1">## airflow/contrib/hooks/spark_submit_hook.py</span>
+<span class="k">def</span> <span class="nf">_resolve_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+  <span class="c1"># Build from connection master or default to yarn if not available</span>
+  <span class="n">conn_data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;master&#39;</span><span class="p">:</span> <span class="s1">&#39;yarn&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;queue&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+               <span class="s1">&#39;deploy_mode&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+               <span class="s1">&#39;spark_home&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+               <span class="s1">&#39;spark_binary&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_binary</span> <span class="ow">or</span> <span class="s2">&#34;spark-submit&#34;</span><span class="p">,</span>
+               <span class="s1">&#39;namespace&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">}</span>
+
+  <span class="k">try</span><span class="p">:</span>
+      <span class="c1"># Master can be local, yarn, spark://HOST:PORT, mesos://HOST:PORT and</span>
+      <span class="c1"># k8s://https://&lt;HOST&gt;:&lt;PORT&gt;</span>
+      <span class="n">conn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_conn_id</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">conn</span><span class="o">.</span><span class="n">port</span><span class="p">:</span>
+          <span class="n">conn_data</span><span class="p">[</span><span class="s1">&#39;master&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&#34;{}:{}&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">conn</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="n">conn</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+          <span class="n">conn_data</span><span class="p">[</span><span class="s1">&#39;master&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">host</span>
+
+      <span class="c1"># Determine optional yarn queue from the extra field</span>
+      <span class="n">extra</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">extra_dejson</span>
+      <span class="n">conn_data</span><span class="p">[</span><span class="s1">&#39;queue&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">extra</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;queue&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+      <span class="n">conn_data</span><span class="p">[</span><span class="s1">&#39;deploy_mode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">extra</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;deploy-mode&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+      <span class="n">conn_data</span><span class="p">[</span><span class="s1">&#39;spark_home&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">extra</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;spark-home&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+      <span class="n">conn_data</span><span class="p">[</span><span class="s1">&#39;spark_binary&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spark_binary</span> <span class="ow">or</span>  \
+          <span class="n">extra</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;spark-binary&#39;</span><span class="p">,</span> <span class="s2">&#34;spark-submit&#34;</span><span class="p">)</span>
+      <span class="n">conn_data</span><span class="p">[</span><span class="s1">&#39;namespace&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">extra</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;namespace&#39;</span><span class="p">)</span>
+  <span class="k">except</span> <span class="n">AirflowException</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+          <span class="s2">&#34;Could not load connection string </span><span class="si">%s</span><span class="s2">, defaulting to </span><span class="si">%s</span><span class="s2">&#34;</span><span class="p">,</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">_conn_id</span><span class="p">,</span> <span class="n">conn_data</span><span class="p">[</span><span class="s1">&#39;master&#39;</span><span class="p">]</span>
+      <span class="p">)</span>
+
+  <span class="k">return</span> <span class="n">conn_data</span></code></pre></div>
+<p>코드를 보면 <code>master</code> <code>queue</code> <code>deploy-mode</code> <code>spark-home</code> <code>spark-binary</code> <code>namespace</code> 를 <code>extra.get</code>을 통해서 어디선가 가져오는게 보인다. 여기에 extra는 바로 <code>Airflow Web -&gt; admin -&gt; Connnections</code> 에서 가져온다.</p>
+
+<p>아래의 이미지처럼 Extra 부분에 json 으로 필요한 부분을 적어주고, Connection의 <code>Conn id</code>를 DAG 설정시 사용했던 <code>spark_config</code>에 <code>conn_id</code>로 넣어주면 된다.
+<img src="spark-airflow-connector.png" alt="spark-connector" /></p>
+
+<p>위와같이 SparkSubmitOperator와 Connection 을 이용하여 spark-submit을 airflow에서 사용할수 있게 되었다.</p>
+
+<p>하지만 필자는 동작시키는 Spark Application마다 <code>queue</code>를 변경시켜야 할 이슈가 있었다. 이러한 상황에서 SparkSubmitOperator를 그대로 쓰려면 사용하려는 queue 마다 connection을 생성해야 하는 번거로운 작업을 해야함으로 필자는 결국 <code>BashOperator</code>로 spark-submit 을 직접 호출하는 방식으로 사용하고 있다.</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>[Airflow] macOS catalina에서 hostname does not match this instance&#39;s hostname 해결하기</title>
@@ -164,7 +293,7 @@ $ sudo service mysql restart</code></pre></div>]]></content>
 		</item>
 		
 		<item>
-			<title>3. Airflow Scheduler SPOF(Single Point Of Failure) 제거하기</title>
+			<title>[Airflow] Scheduler SPOF(Single Point Of Failure) 제거하기</title>
 			<link>https://krespo.github.io/posts/airflow/airflow-scheduler-failover/</link>
 			<pubDate>Mon, 04 Nov 2019 18:48:06 +0900</pubDate>
 			
@@ -240,7 +369,7 @@ $ nohup airflow scheduler &gt; /dev/null <span class="m">2</span>&gt;<span class
 		</item>
 		
 		<item>
-			<title>2. airflow 커버로스 설정</title>
+			<title>[Airflow] 커버로스 설정 및 hive 연결</title>
 			<link>https://krespo.github.io/posts/airflow/kerberos-configuration/</link>
 			<pubDate>Mon, 04 Nov 2019 16:05:44 +0900</pubDate>
 			
@@ -330,7 +459,7 @@ Hook은 외부 플랫폼이나 DB에 접근하기 쉽도록 커넥션/릴리즈 
 		</item>
 		
 		<item>
-			<title>1. Airflow 설치</title>
+			<title>[Airflow] 설치</title>
 			<link>https://krespo.github.io/posts/airflow/1_airflow_install/</link>
 			<pubDate>Mon, 04 Nov 2019 11:34:19 +0900</pubDate>
 			

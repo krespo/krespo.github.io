@@ -3,32 +3,47 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://krespo.github.io/posts/airflow/hostname-error/</loc>
-    <lastmod>2019-11-11T16:34:10+09:00</lastmod>
+    <loc>https://krespo.github.io/posts/airflow/spark-submit-and-airflow/</loc>
+    <lastmod>2019-11-12T13:23:33+09:00</lastmod>
   </url>
   
   <url>
     <loc>https://krespo.github.io/tags/airflow/</loc>
-    <lastmod>2019-11-11T16:34:10+09:00</lastmod>
+    <lastmod>2019-11-12T13:23:33+09:00</lastmod>
   </url>
   
   <url>
     <loc>https://krespo.github.io/posts/</loc>
-    <lastmod>2019-11-11T16:34:10+09:00</lastmod>
+    <lastmod>2019-11-12T13:23:33+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://krespo.github.io/tags/spark/</loc>
+    <lastmod>2019-11-12T13:23:33+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://krespo.github.io/tags/spark-submit/</loc>
+    <lastmod>2019-11-12T13:23:33+09:00</lastmod>
   </url>
   
   <url>
     <loc>https://krespo.github.io/tags/</loc>
-    <lastmod>2019-11-11T16:34:10+09:00</lastmod>
+    <lastmod>2019-11-12T13:23:33+09:00</lastmod>
   </url>
   
   <url>
     <loc>https://krespo.github.io/tags/workflow/</loc>
-    <lastmod>2019-11-11T16:34:10+09:00</lastmod>
+    <lastmod>2019-11-12T13:23:33+09:00</lastmod>
   </url>
   
   <url>
     <loc>https://krespo.github.io/</loc>
+    <lastmod>2019-11-12T13:23:33+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://krespo.github.io/posts/airflow/hostname-error/</loc>
     <lastmod>2019-11-11T16:34:10+09:00</lastmod>
   </url>
   

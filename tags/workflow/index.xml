@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ko-KR</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Mon, 11 Nov 2019 16:34:10 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 12 Nov 2019 13:23:33 +0900</lastBuildDate>
     
 	<atom:link href="https://krespo.github.io/tags/workflow/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>[Airflow] SparkSubmitOperator를 이용한 spark 실행</title>
+      <link>https://krespo.github.io/posts/airflow/spark-submit-and-airflow/</link>
+      <pubDate>Tue, 12 Nov 2019 13:23:33 +0900</pubDate>
+      
+      <guid>https://krespo.github.io/posts/airflow/spark-submit-and-airflow/</guid>
+      <description>Airflow에서는 다양한 Operator를 지원하는데 그 중 Spark을 실행하기 위한 SparkSubmitOperator 라는 것이 존재한다. 이번에는 SparkSubmitOper</description>
+    </item>
     
     <item>
       <title>[Airflow] macOS catalina에서 hostname does not match this instance&#39;s hostname 해결하기</title>
@@ -22,7 +31,7 @@
     </item>
     
     <item>
-      <title>3. Airflow Scheduler SPOF(Single Point Of Failure) 제거하기</title>
+      <title>[Airflow] Scheduler SPOF(Single Point Of Failure) 제거하기</title>
       <link>https://krespo.github.io/posts/airflow/airflow-scheduler-failover/</link>
       <pubDate>Mon, 04 Nov 2019 18:48:06 +0900</pubDate>
       
@@ -31,7 +40,7 @@
     </item>
     
     <item>
-      <title>2. airflow 커버로스 설정</title>
+      <title>[Airflow] 커버로스 설정 및 hive 연결</title>
       <link>https://krespo.github.io/posts/airflow/kerberos-configuration/</link>
       <pubDate>Mon, 04 Nov 2019 16:05:44 +0900</pubDate>
       
@@ -40,7 +49,7 @@
     </item>
     
     <item>
-      <title>1. Airflow 설치</title>
+      <title>[Airflow] 설치</title>
       <link>https://krespo.github.io/posts/airflow/1_airflow_install/</link>
       <pubDate>Mon, 04 Nov 2019 11:34:19 +0900</pubDate>
       
