@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ko-KR</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Tue, 12 Nov 2019 13:23:33 +0900</lastBuildDate>
+    <lastBuildDate>Mon, 02 Dec 2019 11:19:53 +0900</lastBuildDate>
     
 	<atom:link href="https://krespo.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>[Kudu] 소개 및 아키텍쳐</title>
+      <link>https://krespo.github.io/posts/kudu/introducing_apache_kudu/</link>
+      <pubDate>Mon, 02 Dec 2019 11:19:53 +0900</pubDate>
+      
+      <guid>https://krespo.github.io/posts/kudu/introducing_apache_kudu/</guid>
+      <description>Apache Kudu 는 Columnar Storage로서, 실시간/대용량 데이터 분석이 가능한 저장 엔진이다. 여기에 Impala, Spark를 이용하여 쉽고 빠른 데이터 분석이 가능한 특징이 있다.</description>
+    </item>
     
     <item>
       <title>[Airflow] SparkSubmitOperator를 이용한 spark 실행</title>
