@@ -7,13 +7,22 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ko-KR</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Mon, 02 Dec 2019 11:19:53 +0900</lastBuildDate>
+    <lastBuildDate>Mon, 02 Dec 2019 18:41:12 +0900</lastBuildDate>
     
 	<atom:link href="https://krespo.github.io/tags/kudu/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>[Kudu] 소개 및 아키텍쳐</title>
+      <title>[Kudu] 2. Write And Compaction</title>
+      <link>https://krespo.github.io/posts/kudu/read-write-compaction/</link>
+      <pubDate>Mon, 02 Dec 2019 18:41:12 +0900</pubDate>
+      
+      <guid>https://krespo.github.io/posts/kudu/read-write-compaction/</guid>
+      <description>본 포스팅은 아래의 출처의 정보들을 조합하여 나름의 구성을 진행하였다. 잘못 이해하고 있거나, 문제가 있는 부분이 있을수 있음을 사전에 명시하고 시작하도록 하겠다</description>
+    </item>
+    
+    <item>
+      <title>[Kudu] 1. 소개 및 아키텍쳐</title>
       <link>https://krespo.github.io/posts/kudu/introducing_apache_kudu/</link>
       <pubDate>Mon, 02 Dec 2019 11:19:53 +0900</pubDate>
       
