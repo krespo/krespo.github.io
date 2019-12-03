@@ -13,7 +13,7 @@
 
 <meta itemprop="datePublished" content="2019-12-02T18:41:12&#43;09:00" />
 <meta itemprop="dateModified" content="2019-12-02T18:41:12&#43;09:00" />
-<meta itemprop="wordCount" content="1681">
+<meta itemprop="wordCount" content="1682">
 
 
 
@@ -112,11 +112,11 @@
 
 <p>Insert 요청이 들어오면 가장 먼서 <a href="https://ko.wikipedia.org/wiki/%EB%A1%9C%EA%B7%B8_%EC%84%A0%ED%96%89_%EA%B8%B0%EC%9E%85">WAL</a>에 저장된다. 여러 NoSQL 서버에서 사용하는 방법이며 디스크에 플러시 되기전 문제가 발생하였을때 복구하기 위한 방법으로 사용된다.</p>
 
-<p>WAL에 쓰고나면 <code>MemRowSet</code>이라고 불리우는 메모리 영역에 쓰이게 된다. 이 부분에 쌓이게 되다 메모리가 가득차게 되면 디스크에 파일형태로 저장이 되는데 이것을 <code>DiskRowSet</code> 이라고 부른다. <code>DiskRowSet</code>은 Insert Operation을 통해 저장된 데이터인 <code>Base Data</code>와 Update Operation시에 사용할 메모리인 <code>DeltaMemStore</code>로 구성된다.</p>
+<p>WAL에 쓰고나면 <code>MemRowSet</code>이라고 불리우는 메모리 영역에 데이터를 쓴다. 이 부분에 쌓이게 되다 메모리가 가득차게 되면 디스크에 파일형태로 저장이 되는데 이것을 <code>DiskRowSet</code> 이라고 부른다. <code>DiskRowSet</code>은 Insert Operation을 통해 저장된 데이터인 <code>Base Data</code>와 Update Operation시에 사용할 메모리인 <code>DeltaMemStore</code>로 구성된다.</p>
 
 <p><img src="write_path_2.png" alt="write_step_2" /></p>
 
-<p>Insert Operation이 지속적으로 발생하여 <code>MemRowSet</code>이 계속 flush 되면 <code>DiskRowSet</code>은 계속하여 늘어나게 된다. 이는 나중에 언급할 <code>DisRowSet Compaction</code>에 의해 적은수의 파일 형태로 합쳐진다.</p>
+<p>Insert Operation이 지속적으로 발생하여 <code>MemRowSet</code>이 계속 flush 되면 <code>DiskRowSet</code>은 계속하여 늘어나게 된다. 이는 나중에 언급할 <code>DiskRowSet Compaction</code>에 의해 적은수의 파일 형태로 합쳐진다.</p>
 
 <h4 id="2-update-operation">2) Update Operation<a href="#2-update-operation" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
 
