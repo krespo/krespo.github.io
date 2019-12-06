@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ko-KR</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Mon, 02 Dec 2019 18:41:12 +0900</lastBuildDate>
+    <lastBuildDate>Wed, 04 Dec 2019 16:52:07 +0900</lastBuildDate>
     
 	<atom:link href="https://krespo.github.io/tags/kudu/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>[Kudu] 3. Source Build를 이용한 설치</title>
+      <link>https://krespo.github.io/posts/kudu/install_kudu/</link>
+      <pubDate>Wed, 04 Dec 2019 16:52:07 +0900</pubDate>
+      
+      <guid>https://krespo.github.io/posts/kudu/install_kudu/</guid>
+      <description>kudu를 설치하는 방법은 cloudera repository를 이용하여 설치하는 방법이 있고, source build를 통해 설치하는 방법이 있는데, cloudera 버전은 라이센스 관련 이슈</description>
+    </item>
     
     <item>
       <title>[Kudu] 2. Write And Compaction</title>
