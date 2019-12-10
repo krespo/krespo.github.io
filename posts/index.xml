@@ -6,8 +6,47 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>ko-KR</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Wed, 04 Dec 2019 16:52:07 +0900</lastBuildDate>
+		<lastBuildDate>Tue, 10 Dec 2019 14:31:31 +0900</lastBuildDate>
 		<atom:link href="https://krespo.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>[Kafka Manager] 1.Installation</title>
+			<link>https://krespo.github.io/posts/kafka-manager/install-kafka-manager/</link>
+			<pubDate>Tue, 10 Dec 2019 14:31:31 +0900</pubDate>
+			
+			<guid>https://krespo.github.io/posts/kafka-manager/install-kafka-manager/</guid>
+			<description>yahoo에서 만든 kafka-manager를 이용하면 카프카 운영을 위한 다양한 일들을 Web UI기반으로 처리할 수 있다. 설치 ## https://github.com/yahoo/kafka-manager/releases 에서 원하는 버전을 확인하</description>
+			<content type="html"><![CDATA[
+
+<p>yahoo에서 만든 <a href="https://github.com/yahoo/kafka-manager">kafka-manager</a>를 이용하면 카프카 운영을 위한 다양한 일들을 Web UI기반으로 처리할 수 있다.</p>
+
+<h2 id="설치">설치</h2>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1">## https://github.com/yahoo/kafka-manager/releases 에서 원하는 버전을 확인하고 -b 파라미터로 버전을 넘겨준다.</span>
+<span class="c1">## 실제 실행파일은 해당 소스를 빌드한 후 생성이 됨으로 아래의 git clone은 아무 위치에서 실행해도 상관없다.</span>
+$ git clone -b <span class="m">2</span>.0.0.2 https://github.com/yahoo/kafka-manager.git
+$ <span class="nb">cd</span> kafka-manager
+<span class="c1">## 아래의 명령어로 빌드를 하면 target/universal 하위에 zip파일로 빌드파일이 생성된다.</span>
+$ ./sbt clean dist
+
+$ mv ./target/universal/kafka-manager-2.0.0.2.zip <span class="o">{</span>설치하고자 하는 디렉토리<span class="o">}</span>
+$ <span class="nb">cd</span> <span class="o">{</span>설치하고자 하는 디렉토리<span class="o">}</span>
+$ unzip kafka-manager-2.0.0.2.zip</code></pre></div>
+<h2 id="설정">설정</h2>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ vi conf/application.conf
+
+<span class="c1">### zookeeper 호스트를 지정해줌</span>
+<span class="c1">### 아래와 같이 설정하면 zk_host:2181/kafka-manager 라는 노드가 생성되고, 해당 노드에 kafka manager 사용에 따른 각종 state가 저장된다.</span>
+<span class="c1">### 이때 kafka-manager 노드는 자동생성이 된다.</span>
+<span class="c1">### 만약 zk_host:2181/kafka-manager-2.0.0.2와 같이 depth가 추가가 되면 kafka manager는 해당 노드를 생성해 주지 않기 때문에 kafka-manager-2.0.0.2 노드는 직접 수동으로 만들어 줘야 한다.</span>
+<span class="c1">### ex) zkCli.sh create /kafka-manager-2.0.0.2 &#39;&#39;</span>
+kafka-manager.zkhosts<span class="o">=</span>“zk_host:2181”</code></pre></div>
+<h2 id="실행">실행</h2>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1">## foreground</span>
+bin/kafka-manager
+
+<span class="c1">## background</span>
+background nohup ./bin/kafka-manager &gt; /dev/null <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span> <span class="p">&amp;</span></code></pre></div>]]></content>
+		</item>
 		
 		<item>
 			<title>[Kudu] 3. Source Build를 이용한 설치</title>
