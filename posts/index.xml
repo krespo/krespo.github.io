@@ -6,8 +6,87 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>ko-KR</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Tue, 10 Dec 2019 14:31:31 +0900</lastBuildDate>
+		<lastBuildDate>Tue, 10 Dec 2019 18:22:25 +0900</lastBuildDate>
 		<atom:link href="https://krespo.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>[Kudu] 4. 인코딩과 압축</title>
+			<link>https://krespo.github.io/posts/kudu/encoding-compression/</link>
+			<pubDate>Tue, 10 Dec 2019 18:22:25 +0900</pubDate>
+			
+			<guid>https://krespo.github.io/posts/kudu/encoding-compression/</guid>
+			<description>Kudu에서는 컬럼의 인코딩과 압축을 통해 저장 데이터의 사이즈를 줄여, 디스크 공간을 효율적으로 사용할 수 있도록 하고 있다. 1. 인코딩 인코딩은 테이블 생성 시 컬</description>
+			<content type="html"><![CDATA[
+
+<p>Kudu에서는 컬럼의 인코딩과 압축을 통해 저장 데이터의 사이즈를 줄여, 디스크 공간을 효율적으로 사용할 수 있도록 하고 있다.</p>
+
+<h1 id="1-인코딩">1. 인코딩</h1>
+
+<p>인코딩은 테이블 생성 시 컬럼의 정의로 지정할 수 있다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="c1">-- query with impala
+</span><span class="c1"></span><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">various_encodings</span>
+<span class="p">(</span>
+  <span class="n">id</span> <span class="nb">BIGINT</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+  <span class="n">c1</span> <span class="nb">BIGINT</span> <span class="k">ENCODING</span> <span class="n">PLAIN_ENCODING</span><span class="p">,</span>
+  <span class="n">c2</span> <span class="nb">BIGINT</span> <span class="k">ENCODING</span> <span class="n">AUTO_ENCODING</span><span class="p">,</span>
+  <span class="n">c3</span> <span class="n">TINYINT</span> <span class="k">ENCODING</span> <span class="n">BIT_SHUFFLE</span><span class="p">,</span>
+  <span class="n">c4</span> <span class="n">DOUBLE</span> <span class="k">ENCODING</span> <span class="n">BIT_SHUFFLE</span><span class="p">,</span>
+  <span class="n">c5</span> <span class="nb">BOOLEAN</span> <span class="k">ENCODING</span> <span class="n">RLE</span><span class="p">,</span>
+  <span class="n">c6</span> <span class="n">STRING</span> <span class="k">ENCODING</span> <span class="n">DICT_ENCODING</span><span class="p">,</span>
+  <span class="n">c7</span> <span class="n">STRING</span> <span class="k">ENCODING</span> <span class="n">PREFIX_ENCODING</span>
+<span class="p">)</span> <span class="n">PARTITION</span> <span class="k">BY</span> <span class="n">HASH</span><span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="n">PARTITIONS</span> <span class="mi">2</span> <span class="n">STORED</span> <span class="k">AS</span> <span class="n">KUDU</span><span class="p">;</span></code></pre></div>
+<h3 id="1-plain-encoding">1) Plain encoding</h3>
+
+<p>인코딩을 하지 않고 원본 데이터 그대로 저장한다.</p>
+
+<h3 id="2-bitshuffle-encoding">2) Bitshuffle encoding</h3>
+
+<p>비트를 재배치 한 뒤 LZ4 방식으로 압축한다. primary key 로 정렬했을때 값이 반복되거나, 순차적으로 증가/감소 하거나, 일부의 값만 변경이 될때 효율적이다.</p>
+
+<p><img src="bitshuffle.png" alt="bitshuffle encoding" />
+컬럼의 값들을 바이너리스트림 형태로 변경 한 후 LZ4로 압축한다.</p>
+
+<h3 id="3-run-length-encoding">3) Run Length encoding</h3>
+
+<p>primary key로 정렬 했을때 반복되는 동일한 값을 <code>1개의 값과 반복 횟수만 저장</code>하여 저장크기를 줄이는 인코딩이다.
+동일한 값이 연속적으로 저장될 수록 효율적이다.</p>
+
+<pre><code>AAAAABBCCCC  ===&gt; A5B2C4 처럼 1개의 값과 반복 횟수만 저장하는 알고리즘이 Run-Length algorithm 이다.
+</code></pre>
+
+<p><img src="run-length.png" alt="run length encoding" /></p>
+
+<p>그림과 같이 true 연속적으로 50개, false가 연속해서 49개, 다시 true가 1개 나오는 컬럼이 있다고 가정하자. 이때 true는 1로, false는 0으로 바꿀 수 있으며 이를 연속적으로 표현하면
+111111111&hellip;(50개)00000&hellip;(49개)1
+로 표현가능 하다 이를
+Run Length알고리즘으로 풀면 1500491 로 표현할 수 있으며 바이트 스트림으로 만들면 그림의 결과가 된다.</p>
+
+<h3 id="4-dictionary-encoding">4) Dictionary encoding</h3>
+
+<p>컬럼의 값으로 Directionary 가 생성되고, 실제 컬럼의 값에는 해당 Dictionary의 인덱스가 저장된다. Dictionary Encoding은 동일한 값이 반복되며, 유니크한 값이 적은 경우 효율적이다.</p>
+
+<h3 id="5-prefix-encoding">5) Prefix encoding</h3>
+
+<p>공통된 prefix를 갖는 경우, 변경되는 부분만 저장되는 방식이다.
+예를 들어 <a href="http://krespo.github.io/a.png">http://krespo.github.io/a.png</a> 와 <a href="http://krespo.github.io/b.png">http://krespo.github.io/b.png</a> 가 저장되는 경우, 각 컬럼의 value는 a.png와 b.png만 저장된다.</p>
+
+<h1 id="2-압축">2. 압축</h1>
+
+<p>Kudu에서는 인코딩 이외에 압축을 이용하여 디스크 사용량 및 scan 속도를 효율화 할 수 있다.
+압축방식은 <code>LZ4</code>, <code>Snappy</code>, <code>zlib</code>를 사용할 수 있으며, 일반적으로 <code>LZ4</code> 압축이 압축 성능이 좋기 때문에 많이 사용한다.
+<code>zlib</code> 압축은 가장 작은 데이터 사이즈로 압축할 수 있기때문에 디스크 사용량을 최대로 줄이고자 한다면 zlib를 사용하면 된다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="c1">-- query with impala
+</span><span class="c1"></span><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">blog_posts</span>
+<span class="p">(</span>
+  <span class="n">user_id</span> <span class="n">STRING</span> <span class="k">ENCODING</span> <span class="n">DICT_ENCODING</span><span class="p">,</span>
+  <span class="n">post_id</span> <span class="nb">BIGINT</span> <span class="k">ENCODING</span> <span class="n">BIT_SHUFFLE</span><span class="p">,</span>
+  <span class="n">subject</span> <span class="n">STRING</span> <span class="k">ENCODING</span> <span class="n">PLAIN_ENCODING</span><span class="p">,</span>
+  <span class="n">body</span> <span class="n">STRING</span> <span class="n">COMPRESSION</span> <span class="n">LZ4</span><span class="p">,</span>
+  <span class="n">spanish_translation</span> <span class="n">STRING</span> <span class="n">COMPRESSION</span> <span class="n">SNAPPY</span><span class="p">,</span>
+  <span class="n">esperanto_translation</span> <span class="n">STRING</span> <span class="n">COMPRESSION</span> <span class="n">ZLIB</span><span class="p">,</span>
+  <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">post_id</span><span class="p">)</span>
+<span class="p">)</span> <span class="n">PARTITION</span> <span class="k">BY</span> <span class="n">HASH</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">post_id</span><span class="p">)</span> <span class="n">PARTITIONS</span> <span class="mi">2</span> <span class="n">STORED</span> <span class="k">AS</span> <span class="n">KUDU</span><span class="p">;</span></code></pre></div>]]></content>
+		</item>
 		
 		<item>
 			<title>[Kafka Manager] 1.Installation</title>
