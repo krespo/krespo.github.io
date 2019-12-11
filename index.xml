@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ko-KR</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Tue, 10 Dec 2019 18:22:25 +0900</lastBuildDate>
+    <lastBuildDate>Wed, 11 Dec 2019 16:16:49 +0900</lastBuildDate>
     
 	<atom:link href="https://krespo.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>[Kafka] 파티션 Skew, Leader Skew 그리고 Reassign Partition</title>
+      <link>https://krespo.github.io/posts/kafka/skew-reassign-partition/</link>
+      <pubDate>Wed, 11 Dec 2019 16:16:49 +0900</pubDate>
+      
+      <guid>https://krespo.github.io/posts/kafka/skew-reassign-partition/</guid>
+      <description>kafka-manager에서 카프카를 운영하다보면 Skewed 혹은 Leader Skewed가 true가 된 것을 종종 볼수 있다. 그럼 Skew는 무엇일까? Skew는 카프</description>
+    </item>
     
     <item>
       <title>[Kudu] 4. 인코딩과 압축</title>

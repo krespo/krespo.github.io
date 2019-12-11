@@ -3,6 +3,36 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://krespo.github.io/posts/kafka/skew-reassign-partition/</loc>
+    <lastmod>2019-12-11T16:16:49+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://krespo.github.io/tags/kafka/</loc>
+    <lastmod>2019-12-11T16:16:49+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://krespo.github.io/tags/kafka-manager/</loc>
+    <lastmod>2019-12-11T16:16:49+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://krespo.github.io/posts/</loc>
+    <lastmod>2019-12-11T16:16:49+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://krespo.github.io/tags/</loc>
+    <lastmod>2019-12-11T16:16:49+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://krespo.github.io/</loc>
+    <lastmod>2019-12-11T16:16:49+09:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://krespo.github.io/posts/kudu/encoding-compression/</loc>
     <lastmod>2019-12-10T18:22:25+09:00</lastmod>
   </url>
@@ -13,32 +43,7 @@
   </url>
   
   <url>
-    <loc>https://krespo.github.io/posts/</loc>
-    <lastmod>2019-12-10T18:22:25+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://krespo.github.io/tags/</loc>
-    <lastmod>2019-12-10T18:22:25+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://krespo.github.io/</loc>
-    <lastmod>2019-12-10T18:22:25+09:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://krespo.github.io/posts/kafka-manager/install-kafka-manager/</loc>
-    <lastmod>2019-12-10T14:31:31+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://krespo.github.io/tags/kafka/</loc>
-    <lastmod>2019-12-10T14:31:31+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://krespo.github.io/tags/kafka-manager/</loc>
     <lastmod>2019-12-10T14:31:31+09:00</lastmod>
   </url>
   
