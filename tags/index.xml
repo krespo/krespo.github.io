@@ -7,10 +7,28 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ko-KR</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Wed, 11 Dec 2019 16:16:49 +0900</lastBuildDate>
+    <lastBuildDate>Wed, 18 Dec 2019 20:17:52 +0900</lastBuildDate>
     
 	<atom:link href="https://krespo.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>docker</title>
+      <link>https://krespo.github.io/tags/docker/</link>
+      <pubDate>Wed, 18 Dec 2019 20:17:52 +0900</pubDate>
+      
+      <guid>https://krespo.github.io/tags/docker/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>nifi</title>
+      <link>https://krespo.github.io/tags/nifi/</link>
+      <pubDate>Wed, 18 Dec 2019 20:17:52 +0900</pubDate>
+      
+      <guid>https://krespo.github.io/tags/nifi/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>kafka</title>

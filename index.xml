@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ko-KR</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Wed, 11 Dec 2019 16:16:49 +0900</lastBuildDate>
+    <lastBuildDate>Wed, 18 Dec 2019 20:17:52 +0900</lastBuildDate>
     
 	<atom:link href="https://krespo.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>[NIFI] Custom Processor 생성 및 테스트 With Docker</title>
+      <link>https://krespo.github.io/posts/nifi/create-custom-processor/</link>
+      <pubDate>Wed, 18 Dec 2019 20:17:52 +0900</pubDate>
+      
+      <guid>https://krespo.github.io/posts/nifi/create-custom-processor/</guid>
+      <description>nifi에 커스텀 프로세서를 등록할 일이 생겼는데, 커스텀 프로세서를 빌드한 후 테스트 하기가 까다로워 도커를 이용하여 로컬에 환경을 구축하고 간단하게 테스트 하</description>
+    </item>
     
     <item>
       <title>[Kafka] 파티션 Skew, Leader Skew 그리고 Reassign Partition</title>
