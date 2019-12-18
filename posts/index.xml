@@ -131,7 +131,7 @@ $ docker start nifi</code></pre></div>
 
 <p><img src="custom-processor.png" alt="add processor" /></p>
 
-<h1 id="4-nifi-갱신방법">4. nifi 갱신방법</h1>
+<h1 id="4-커스텀-프로세서-재배포-방법">4. 커스텀 프로세서 재배포 방법</h1>
 
 <p>커스텀 프로세서의 로직을 수정했다면 아래와 같이 메이븐 빌드 후, nifi 컨테이너를 재시작시키는 작업 만으로 변경된 프로세서를 등록할 수 있다.</p>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ maven clean package
