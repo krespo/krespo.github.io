@@ -6,8 +6,82 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>ko-KR</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Thu, 02 Jan 2020 10:21:11 +0900</lastBuildDate>
+		<lastBuildDate>Thu, 02 Jan 2020 11:01:41 +0900</lastBuildDate>
 		<atom:link href="https://krespo.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>[Nifi]Could Not Generate Extensions Documentation 에러 해결 방법</title>
+			<link>https://krespo.github.io/posts/nifi/could-not-generate-extensions-documentation/</link>
+			<pubDate>Thu, 02 Jan 2020 11:01:41 +0900</pubDate>
+			
+			<guid>https://krespo.github.io/posts/nifi/could-not-generate-extensions-documentation/</guid>
+			<description>커스텀 프로세서 생성 후 mvn clean package를 통해 .nar파일을 생성하는데, 아래와 같은 에러가 발생했다. [ERROR] Could not generate extensions&#39; documentation org.apache.maven.plugin.MojoExecutionException: Failed to create Extension Documentation at org.apache.nifi.NarMojo.generateDocumentation (NarMojo.java:596) at org.apache.nifi.NarMojo.execute (NarMojo.java:499) at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo (DefaultBuildPluginManager.java:137) at</description>
+			<content type="html"><![CDATA[<p>커스텀 프로세서 생성 후 <code>mvn clean package</code>를 통해 .nar파일을 생성하는데, 아래와 같은 에러가 발생했다.</p>
+
+<pre><code>[ERROR] Could not generate extensions' documentation
+org.apache.maven.plugin.MojoExecutionException: Failed to create Extension Documentation
+    at org.apache.nifi.NarMojo.generateDocumentation (NarMojo.java:596)
+    at org.apache.nifi.NarMojo.execute (NarMojo.java:499)
+    at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo (DefaultBuildPluginManager.java:137)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:210)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:156)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:148)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:117)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:81)
+    at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build (SingleThreadedBuilder.java:56)
+    at org.apache.maven.lifecycle.internal.LifecycleStarter.execute (LifecycleStarter.java:128)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:305)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:192)
+    at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:105)
+    at org.apache.maven.cli.MavenCli.execute (MavenCli.java:956)
+    at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:288)
+    at org.apache.maven.cli.MavenCli.main (MavenCli.java:192)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0 (Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke (NativeMethodAccessorImpl.java:62)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke (DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke (Method.java:498)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:282)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:225)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:406)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:347)
+Caused by: java.lang.NullPointerException
+    at org.apache.nifi.NarMojo.getRequiredServiceDefinitions (NarMojo.java:708)
+    at org.apache.nifi.NarMojo.writeDocumentation (NarMojo.java:634)
+    at org.apache.nifi.NarMojo.writeDocumentation (NarMojo.java:605)
+    at org.apache.nifi.NarMojo.generateDocumentation (NarMojo.java:577)
+    at org.apache.nifi.NarMojo.execute (NarMojo.java:499)
+    at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo (DefaultBuildPluginManager.java:137)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:210)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:156)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:148)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:117)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:81)
+    at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build (SingleThreadedBuilder.java:56)
+    at org.apache.maven.lifecycle.internal.LifecycleStarter.execute (LifecycleStarter.java:128)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:305)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:192)
+    at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:105)
+    at org.apache.maven.cli.MavenCli.execute (MavenCli.java:956)
+    at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:288)
+    at org.apache.maven.cli.MavenCli.main (MavenCli.java:192)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0 (Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke (NativeMethodAccessorImpl.java:62)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke (DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke (Method.java:498)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:282)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:225)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:406)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:347)
+</code></pre>
+
+<p>위와 같은 문제 발생시 커스텀 프로세서 프로젝트 하위의 <code>xxx-processors</code> 프로젝트에 디펜던시 추가를 하여 해결 가능하다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>org.apache.nifi<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>nifi-standard-services-api-nar<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>${nifi.version}<span class="nt">&lt;/version&gt;</span>
+    <span class="nt">&lt;type&gt;</span>nar<span class="nt">&lt;/type&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span></code></pre></div>]]></content>
+		</item>
 		
 		<item>
 			<title>[Java] invalid source release 에러 해결</title>
