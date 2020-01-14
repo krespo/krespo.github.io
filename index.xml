@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ko-KR</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Thu, 02 Jan 2020 11:01:41 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 14 Jan 2020 13:13:56 +0900</lastBuildDate>
     
 	<atom:link href="https://krespo.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>[Kudu] 시간 기준의 Range Partition 시 주의점(timezone, UTC)</title>
+      <link>https://krespo.github.io/posts/kudu/range-partition/</link>
+      <pubDate>Tue, 14 Jan 2020 13:13:56 +0900</pubDate>
+      
+      <guid>https://krespo.github.io/posts/kudu/range-partition/</guid>
+      <description>Kudu는 시간 컬럼을 저장할 때 unixtime_micros를 이용해서 저장한다. 만약 이 컬럼을 통해 연도별,월별,일별 등 시간으로 Range Partitio</description>
+    </item>
     
     <item>
       <title>[Nifi]Could Not Generate Extensions Documentation 에러 해결 방법</title>
