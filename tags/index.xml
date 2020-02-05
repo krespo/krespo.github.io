@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ko-KR</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Fri, 31 Jan 2020 16:56:58 +0900</lastBuildDate>
+    <lastBuildDate>Wed, 05 Feb 2020 11:06:09 +0900</lastBuildDate>
     
 	<atom:link href="https://krespo.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>airflow</title>
+      <link>https://krespo.github.io/tags/airflow/</link>
+      <pubDate>Wed, 05 Feb 2020 11:06:09 +0900</pubDate>
+      
+      <guid>https://krespo.github.io/tags/airflow/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>chrome</title>
@@ -99,15 +108,6 @@
       <pubDate>Wed, 11 Dec 2019 16:16:49 +0900</pubDate>
       
       <guid>https://krespo.github.io/tags/kafka-manager/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>airflow</title>
-      <link>https://krespo.github.io/tags/airflow/</link>
-      <pubDate>Tue, 12 Nov 2019 13:23:33 +0900</pubDate>
-      
-      <guid>https://krespo.github.io/tags/airflow/</guid>
       <description></description>
     </item>
     

@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ko-KR</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Fri, 31 Jan 2020 16:56:58 +0900</lastBuildDate>
+    <lastBuildDate>Wed, 05 Feb 2020 11:06:09 +0900</lastBuildDate>
     
 	<atom:link href="https://krespo.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>[Airflow] BashOperator 확장을 통한 Spark Custom Operator</title>
+      <link>https://krespo.github.io/posts/airflow/spark-custom-operator/</link>
+      <pubDate>Wed, 05 Feb 2020 11:06:09 +0900</pubDate>
+      
+      <guid>https://krespo.github.io/posts/airflow/spark-custom-operator/</guid>
+      <description>이전 포스팅을 통해 SparkSubmitOperator을 사용해보았다. 하지만 포스팅 말미에도 적어놓았지만 SparkSubmitOperator</description>
+    </item>
     
     <item>
       <title>[기타] Chrome NET::ERR_CERT_REVOKED 해결방법</title>

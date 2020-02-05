@@ -6,8 +6,131 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>ko-KR</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Fri, 31 Jan 2020 16:56:58 +0900</lastBuildDate>
+		<lastBuildDate>Wed, 05 Feb 2020 11:06:09 +0900</lastBuildDate>
 		<atom:link href="https://krespo.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>[Airflow] BashOperator 확장을 통한 Spark Custom Operator</title>
+			<link>https://krespo.github.io/posts/airflow/spark-custom-operator/</link>
+			<pubDate>Wed, 05 Feb 2020 11:06:09 +0900</pubDate>
+			
+			<guid>https://krespo.github.io/posts/airflow/spark-custom-operator/</guid>
+			<description>이전 포스팅을 통해 SparkSubmitOperator을 사용해보았다. 하지만 포스팅 말미에도 적어놓았지만 SparkSubmitOperator</description>
+			<content type="html"><![CDATA[
+
+<p>이전 포스팅을 통해 <a href="/posts/airflow/spark-submit-and-airflow">SparkSubmitOperator</a>을 사용해보았다. 하지만 포스팅 말미에도 적어놓았지만 SparkSubmitOperator의 이슈때문에(yarn queue를 지정하기 어려운점) BashOperator를 상속하여 SparkBashOperator를 만들어 보았다.</p>
+
+<p>BashOperator를 이용하여 spark_submit을 직접 호출하는 형태임으로, 상황에 따라 Spark Binary, Hadoop Binary, Hadoop Config 등 설정이 필요하다.</p>
+
+<h2 id="전체-코드">전체 코드</h2>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">airflow.operators.bash_operator</span> <span class="kn">import</span> <span class="n">BashOperator</span>
+<span class="kn">from</span> <span class="nn">airflow.utils.decorators</span> <span class="kn">import</span> <span class="n">apply_defaults</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="k">class</span> <span class="nc">SparkBashOperator</span><span class="p">(</span><span class="n">BashOperator</span><span class="p">):</span>
+
+    <span class="nd">@apply_defaults</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">spark_opts</span><span class="o">=</span><span class="p">[],</span>
+            <span class="n">driver_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">driver_memory</span><span class="o">=</span><span class="s2">&#34;2g&#34;</span><span class="p">,</span>
+            <span class="n">executor_cores</span><span class="o">=</span><span class="s2">&#34;5&#34;</span><span class="p">,</span>
+            <span class="n">num_executors</span><span class="o">=</span><span class="s2">&#34;1&#34;</span><span class="p">,</span>
+            <span class="n">executor_memory</span><span class="o">=</span><span class="s2">&#34;5g&#34;</span><span class="p">,</span>
+            <span class="n">max_attempts</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">queue</span><span class="o">=</span><span class="s2">&#34;root.default&#34;</span><span class="p">,</span>
+            <span class="n">spark_class</span><span class="o">=</span><span class="s2">&#34;&#34;</span><span class="p">,</span>
+            <span class="n">jar</span><span class="o">=</span><span class="s2">&#34;&#34;</span><span class="p">,</span>
+            <span class="n">keytab</span><span class="o">=</span><span class="s2">&#34;&#34;</span><span class="p">,</span>
+            <span class="n">principal</span><span class="o">=</span><span class="s2">&#34;&#34;</span><span class="p">,</span>
+            <span class="n">job_args</span><span class="o">=</span><span class="p">[],</span>
+            <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SparkBashOperator</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">bash_command</span><span class="o">=</span><span class="s2">&#34;&#34;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">driver_cores</span> <span class="o">=</span> <span class="n">driver_cores</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">driver_memory</span> <span class="o">=</span> <span class="n">driver_memory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">executor_cores</span> <span class="o">=</span> <span class="n">executor_cores</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nun_executors</span> <span class="o">=</span> <span class="n">num_executors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">executor_memory</span> <span class="o">=</span> <span class="n">executor_memory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_attempts</span> <span class="o">=</span> <span class="n">max_attempts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">queue</span> <span class="o">=</span> <span class="n">queue</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spark_class</span> <span class="o">=</span> <span class="n">spark_class</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">jar</span> <span class="o">=</span> <span class="n">jar</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keytab</span> <span class="o">=</span> <span class="n">keytab</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">principal</span> <span class="o">=</span> <span class="n">principal</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">job_args</span> <span class="o">=</span> <span class="n">job_args</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spark_opts</span> <span class="o">=</span> <span class="n">spark_opts</span>
+
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="s2">&#34;&#34;&#34;
+</span><span class="s2">            spark-submit --master yarn </span><span class="se">\
+</span><span class="se"></span><span class="s2">            --deploy-mode cluster </span><span class="se">\
+</span><span class="se"></span><span class="s2">            --driver-cores {driver_cores} </span><span class="se">\
+</span><span class="se"></span><span class="s2">            --driver-memory {driver_memory} </span><span class="se">\
+</span><span class="se"></span><span class="s2">            --executor-cores {executor_cores} </span><span class="se">\
+</span><span class="se"></span><span class="s2">            --num-executors {nun_executors} </span><span class="se">\
+</span><span class="se"></span><span class="s2">            --executor-memory {executor_memory} </span><span class="se">\
+</span><span class="se"></span><span class="s2">            --keytab {keytab} </span><span class="se">\
+</span><span class="se"></span><span class="s2">            --principal {principal} </span><span class="se">\
+</span><span class="se"></span><span class="s2">            --conf spark.yarn.maxAppAttempts={max_attempts} </span><span class="se">\
+</span><span class="se"></span><span class="s2">            {spark_opts} </span><span class="se">\
+</span><span class="se"></span><span class="s2">            --queue {queue} </span><span class="se">\
+</span><span class="se"></span><span class="s2">            --class {spark_class} </span><span class="se">\
+</span><span class="se"></span><span class="s2">            {jar} {job_args}
+</span><span class="s2">            &#34;&#34;&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">driver_cores</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">driver_cores</span><span class="p">,</span>
+                       <span class="n">driver_memory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">driver_memory</span><span class="p">,</span>
+                       <span class="n">executor_cores</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">executor_cores</span><span class="p">,</span>
+                       <span class="n">nun_executors</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nun_executors</span><span class="p">,</span>
+                       <span class="n">executor_memory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">executor_memory</span><span class="p">,</span>
+                       <span class="n">max_attempts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_attempts</span><span class="p">,</span>
+                       <span class="n">queue</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="p">,</span>
+                       <span class="n">spark_class</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">spark_class</span><span class="p">,</span>
+                       <span class="n">jar</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">jar</span><span class="p">,</span>
+                       <span class="n">keytab</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">keytab</span><span class="p">,</span>
+                       <span class="n">principal</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">principal</span><span class="p">,</span>
+                       <span class="n">job_args</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">job_args</span><span class="p">),</span>
+                       <span class="n">spark_opts</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spark_opts</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bash_command</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&#34;\s\s+&#34;</span><span class="p">,</span> <span class="s2">&#34; &#34;</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">SparkBashOperator</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">context</span><span class="p">)</span></code></pre></div>
+<p>코드는 <a href="https://gist.github.com/krespo/c78818559ebe35ac306451bf589ed723">여기</a>에서 확인가능하다.</p>
+
+<h1 id="사용법">사용법</h1>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">default_args</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s1">&#39;retries&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s1">&#39;catchup&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+    <span class="s1">&#39;retry_delay&#39;</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="n">spark_args</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">driver_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                  <span class="n">driver_memory</span><span class="o">=</span><span class="s2">&#34;2g&#34;</span><span class="p">,</span>
+                  <span class="n">executor_cores</span><span class="o">=</span><span class="s2">&#34;5&#34;</span><span class="p">,</span>
+                  <span class="n">num_executors</span><span class="o">=</span><span class="s2">&#34;1&#34;</span><span class="p">,</span>
+                  <span class="n">executor_memory</span><span class="o">=</span><span class="s2">&#34;5g&#34;</span><span class="p">,</span>
+                  <span class="n">max_attempts</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                  <span class="n">queue</span><span class="o">=</span><span class="s2">&#34;default&#34;</span><span class="p">,</span>
+                  <span class="n">spark_opts</span><span class="o">=</span><span class="p">[</span><span class="s2">&#34;--conf </span><span class="se">\&#34;</span><span class="s2">spark.executor.extraJavaOptions=-XX:+PrintGCDetails -XX:+PrintGCTimeStamps</span><span class="se">\&#34;</span><span class="s2">&#34;</span><span class="p">,</span>
+                              <span class="s2">&#34;--conf spark.eventLog.enabled=false&#34;</span>
+                              <span class="p">],</span>
+                  <span class="n">spark_class</span><span class="o">=</span><span class="s2">&#34;className&#34;</span><span class="p">,</span>
+                  <span class="n">jar</span><span class="o">=</span><span class="s2">&#34;jar path&#34;</span><span class="p">,</span>
+                  <span class="n">keytab</span><span class="o">=</span><span class="n">var_json</span><span class="p">[</span><span class="s1">&#39;keytab&#39;</span><span class="p">],</span>
+                  <span class="n">principal</span><span class="o">=</span><span class="n">var_json</span><span class="p">[</span><span class="s1">&#39;principal&#39;</span><span class="p">],</span>
+                  <span class="n">job_args</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;--table=tableName&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;--prefix=prefix&#39;</span><span class="p">,</span>
+                            <span class="p">],</span>
+                  <span class="p">)</span>
+
+<span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="s1">&#39;spark&#39;</span><span class="p">,</span> <span class="n">default_args</span><span class="o">=</span><span class="n">default_args</span><span class="p">,</span> <span class="n">schedule_interval</span><span class="o">=</span><span class="s2">&#34;@once&#34;</span><span class="p">)</span>
+
+<span class="n">cdl_to_cdp</span> <span class="o">=</span> <span class="n">SparkBashOperator</span><span class="p">(</span>
+    <span class="n">task_id</span><span class="o">=</span><span class="s1">&#39;spark_bash_operator&#39;</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">spark_args</span><span class="p">,</span>
+    <span class="n">dag</span><span class="o">=</span><span class="n">dag</span><span class="p">)</span></code></pre></div>]]></content>
+		</item>
 		
 		<item>
 			<title>[기타] Chrome NET::ERR_CERT_REVOKED 해결방법</title>

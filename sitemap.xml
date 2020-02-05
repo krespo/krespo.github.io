@@ -3,6 +3,31 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://krespo.github.io/posts/airflow/spark-custom-operator/</loc>
+    <lastmod>2020-02-05T11:06:09+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://krespo.github.io/tags/airflow/</loc>
+    <lastmod>2020-02-05T11:06:09+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://krespo.github.io/posts/</loc>
+    <lastmod>2020-02-05T11:06:09+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://krespo.github.io/tags/</loc>
+    <lastmod>2020-02-05T11:06:09+09:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://krespo.github.io/</loc>
+    <lastmod>2020-02-05T11:06:09+09:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://krespo.github.io/posts/etc/chrome_err_cert_revoked_error/</loc>
     <lastmod>2020-01-31T16:56:58+09:00</lastmod>
   </url>
@@ -13,22 +38,7 @@
   </url>
   
   <url>
-    <loc>https://krespo.github.io/posts/</loc>
-    <lastmod>2020-01-31T16:56:58+09:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://krespo.github.io/tags/ssl/</loc>
-    <lastmod>2020-01-31T16:56:58+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://krespo.github.io/tags/</loc>
-    <lastmod>2020-01-31T16:56:58+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://krespo.github.io/</loc>
     <lastmod>2020-01-31T16:56:58+09:00</lastmod>
   </url>
   
@@ -124,11 +134,6 @@
   
   <url>
     <loc>https://krespo.github.io/posts/airflow/spark-submit-and-airflow/</loc>
-    <lastmod>2019-11-12T13:23:33+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://krespo.github.io/tags/airflow/</loc>
     <lastmod>2019-11-12T13:23:33+09:00</lastmod>
   </url>
   
