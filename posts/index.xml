@@ -6,8 +6,157 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>ko-KR</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Wed, 05 Feb 2020 11:06:09 +0900</lastBuildDate>
+		<lastBuildDate>Wed, 05 Feb 2020 16:53:19 +0900</lastBuildDate>
 		<atom:link href="https://krespo.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>[Airflow] Local 개발환경 설정(1)_설치</title>
+			<link>https://krespo.github.io/posts/airflow/develop-environment/</link>
+			<pubDate>Wed, 05 Feb 2020 16:53:19 +0900</pubDate>
+			
+			<guid>https://krespo.github.io/posts/airflow/develop-environment/</guid>
+			<description>로컬에서 airflow dag를 생성하거나, 커스텀 오퍼레이터를 생성하기 위해서 로컬에 airflow를 세팅하고, dag를 개발하는 환경을 구축해 보고자 한다. 요구사</description>
+			<content type="html"><![CDATA[
+
+<p>로컬에서 airflow dag를 생성하거나, 커스텀 오퍼레이터를 생성하기 위해서 로컬에 airflow를 세팅하고, dag를 개발하는 환경을 구축해 보고자 한다.</p>
+
+<h2 id="요구사항">요구사항</h2>
+
+<ul>
+<li>os: Mac OS(Catalina)</li>
+<li><a href="https://github.com/">github</a></li>
+<li><a href="https://brew.sh/index_ko">Homebrew</a>
+
+<ul>
+<li>direnv를 설치하기 위함</li>
+</ul></li>
+<li><a href="https://direnv.net/">direnv</a>
+
+<ul>
+<li>direnv는 해당 디렉토리에 .envrc 파일을 읽어 자동으로 python virtualenv 환경을 활성화 시켜주는 역할을 한다.</li>
+</ul></li>
+</ul>
+
+<h2 id="구조">구조</h2>
+
+<p><img src="airflow-dev.png" alt="develop-environment" /></p>
+
+<ul>
+<li>github에 2개의 repository를 생성한다.(airflow-devel, airflow-dags)
+
+<ul>
+<li>airflow-devel: 로컬에서 테스트 하기 위한 root 프로젝트, 이 프로젝트는 로컬 테스트 환경에서만 사용한다.</li>
+<li>airflow-dags: 로컬 및 실제 Airflow 클러스터에서 실행하고자 하는 dag 프로젝트, git submodule을 이용하여 관리된다.</li>
+</ul></li>
+</ul>
+
+<h2 id="0-homebrew-direnv-설치">0. Homebrew, direnv 설치</h2>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1">## homebrew install</span>
+$ /usr/bin/ruby -e <span class="s2">&#34;</span><span class="k">$(</span>curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install<span class="k">)</span><span class="s2">&#34;</span>
+
+<span class="c1">## direnv install</span>
+$ brew install direnv
+$ <span class="nb">echo</span> <span class="s1">&#39;eval &#34;$(direnv hook bash)&#34;&#39;</span> &gt;&gt; ~/.bash_profile
+$ <span class="nb">source</span> ~/.bash_profile</code></pre></div>
+<h2 id="1-github-repository-생성">1. github Repository 생성</h2>
+
+<ul>
+<li>airflow-devel</li>
+<li>airflow-dags</li>
+</ul>
+
+<h2 id="2-airflow-devel-설정">2. airflow-devel 설정</h2>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ git clone <span class="o">{</span>1에서 생성한 git repository<span class="o">}</span>/airflow-devel.git
+$ <span class="nb">cd</span> airflow-devel
+
+$ <span class="nb">echo</span> <span class="s1">&#39;layout python3&#39;</span> &gt; .envrc
+$ <span class="nb">echo</span> <span class="s1">&#39;export AIRFLOW_HOME=&#39;</span><span class="nv">$PWD</span> &gt;&gt; .envrc
+$ direnv allow
+
+$ ls -alh
+total <span class="m">8</span>
+drwxr-xr-x   <span class="m">5</span> user  staff   160B  <span class="m">2</span>  <span class="m">5</span> <span class="m">17</span>:30 .
+drwxr-xr-x  <span class="m">93</span> user  staff   <span class="m">2</span>.9K  <span class="m">2</span>  <span class="m">5</span> <span class="m">17</span>:20 ..
+drwxr-xr-x   <span class="m">3</span> user  staff    96B  <span class="m">2</span>  <span class="m">5</span> <span class="m">17</span>:30 .direnv
+-rw-r--r--   <span class="m">1</span> user  staff    66B  <span class="m">2</span>  <span class="m">5</span> <span class="m">17</span>:29 .envrc
+drwxr-xr-x   <span class="m">9</span> user  staff   288B  <span class="m">2</span>  <span class="m">5</span> <span class="m">17</span>:31 .git</code></pre></div>
+<p><code>.direnv</code>가 생성되고 그 하위에 python virtual environement 환경이 세팅된다.</p>
+
+<p>만약 <code>.direnv</code> 가 생기지 않으면 터미널을 종료한 후 다시 해당위치(airflow-devel)로 이동하면 .direnv가 생성될것이다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1">## airflow 설치를 위한 requirements.txt 파일 생성</span>
+<span class="c1">## pip install apache-airflow 명령어로 바로 설치할 수 있으나, 나중에 추가 모듈을 설치할수 있음으로 파일로 관리하자.</span>
+$ <span class="nb">echo</span> <span class="s1">&#39;apache-airflow==1.10.5&#39;</span> &gt;&gt; requirements.txt
+$ pip install -r ./requirements.txt
+
+<span class="c1">## airflow-dags 를 git submodule을 통해 추가</span>
+<span class="c1">## airflow-dags 프로젝트를 dags라는 디렉토리로 클론</span>
+$ git submodule -b master add <span class="o">{</span>1에서 생성한 git repository<span class="o">}</span>/airflow-dags.git dags
+
+<span class="c1">## airflow에 필요한 DB 테이블들을 생성</span>
+$ airflow initdb
+
+<span class="c1">## initdb 이후에 airflow.cfg, airflow.db, logs, unittests.cfg가 자동으로 생성된것을 볼수 있다.</span>
+$ ls -alh
+total <span class="m">592</span>
+-rw-r--r--  <span class="m">1</span> user  staff    30K  <span class="m">2</span>  <span class="m">5</span> <span class="m">17</span>:50 airflow.cfg
+-rw-r--r--  <span class="m">1</span> user  staff   216K  <span class="m">2</span>  <span class="m">5</span> <span class="m">17</span>:52 airflow.db
+drwxr-xr-x  <span class="m">3</span> user  staff    96B  <span class="m">2</span>  <span class="m">5</span> <span class="m">17</span>:48 dags
+drwxr-xr-x  <span class="m">3</span> user  staff    96B  <span class="m">2</span>  <span class="m">5</span> <span class="m">17</span>:50 logs
+-rw-r--r--  <span class="m">1</span> user  staff    23B  <span class="m">2</span>  <span class="m">5</span> <span class="m">17</span>:36 requirements.txt
+-rw-r--r--  <span class="m">1</span> user  staff   <span class="m">2</span>.5K  <span class="m">2</span>  <span class="m">5</span> <span class="m">17</span>:50 unittests.cfg</code></pre></div>
+<h2 id="3-airflow-설정">3. Airflow 설정</h2>
+
+<pre><code>## airflow.cfg를 열어 아래의 내용을 설정한다.
+# airflow의 기본 예제 dag를 로드할지 안할지
+load_examples = False
+# backfill 기능 on/off
+catchup_by_default = False
+# timezone
+default_timezone = Asia/Seoul
+# 얼마나 자주 dags 디렉토리를 스캔할껀지 설정
+# dag 파일을 생성하고 아래와 같은 시간이 지나면 자동으로 web에 노출됨
+# 테스트 환경이니 더 짧게 가져가도 상관없음, 현재는 10초
+dag_dir_list_interval = 10
+</code></pre>
+
+<h2 id="4-gitignore-설정">4. gitignore 설정</h2>
+
+<p>airflow-devel Repository를 다른 팀원들과 함께 사용하기 위해서는 airflow 설치시 생성되는 것들을 git에 커밋되지 않도록 ignore 시켜줘야 한다.</p>
+
+<pre><code>## .gitignore 생성
+airflow.cfg
+airflow.db
+airflow-webserver.pid
+unittests.cfg
+.idea
+logs
+venv
+*.iml
+.envrc
+.direnv
+dist
+airflow.egg-info
+build
+</code></pre>
+
+<h2 id="5-airflow-실행">5. Airflow 실행</h2>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ nohup airflow webserver &gt; /dev/null <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span> <span class="p">&amp;</span>
+$ nohup airflow scheduler &gt; /dev/null <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span> <span class="p">&amp;</span></code></pre></div>
+<p>만약 <code>load_examples</code>를 False로 설정했음에도 예제 dag들이 웹에 보인다면 <code>airflow resetdb</code> 를 실행하여 db를 초기화하고 다시 airflow를 실행하면 된다.</p>
+
+<p>이제 <a href="http://localhost:8080">http://localhost:8080</a> 으로 접속하면 로컬에 설정한 airflow에 접속 가능하다.</p>
+
+<h2 id="기타">기타</h2>
+
+<p>혼자서 개발하는 환경이라면 하나하나 설정해도 별 이슈가 없지만, 팀원들이 함께 개발환경을 공유해야 할 경우, 위의 단계를 하나하나 진행하라고 하는것은 너무 불편한 일이다. 따라서 스크립트를 만들고 해당 스크립트를 실행하여 한방에 airflow 설치가 되도록 하자.</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ git clone https://github.com/krespo/airflow-devel.git
+$ <span class="nb">cd</span> airflow-devel
+$ ./sbin/setup.sh</code></pre></div>
+<p>설치 후 airflow.cfg를 수정하고 실행하면 된다.</p>
+
+<p>실제 소스는 <a href="https://github.com/krespo/airflow-devel">https://github.com/krespo/airflow-devel</a>에서 확인 할 수 있다. 필요하다면 위의 코드를 fork 떠서 사용하면 된다.</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>[Airflow] BashOperator 확장을 통한 Spark Custom Operator</title>
