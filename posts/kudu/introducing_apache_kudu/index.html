@@ -9,16 +9,13 @@
 	<meta name="msapplication-TileColor" content="#494f5c">
 <meta itemprop="name" content="[Kudu] 1. 소개 및 아키텍쳐">
 <meta itemprop="description" content="Apache Kudu 는 Columnar Storage로서, 실시간/대용량 데이터 분석이 가능한 저장 엔진이다. 여기에 Impala, Spark를 이용하여 쉽고 빠른 데이터 분석이 가능한 특징이 있다.">
-
-
 <meta itemprop="datePublished" content="2019-12-02T11:19:53&#43;09:00" />
 <meta itemprop="dateModified" content="2019-12-02T11:19:53&#43;09:00" />
 <meta itemprop="wordCount" content="782">
 
 
 
-<meta itemprop="keywords" content="kudu," />
-<meta property="og:title" content="[Kudu] 1. 소개 및 아키텍쳐" />
+<meta itemprop="keywords" content="kudu," /><meta property="og:title" content="[Kudu] 1. 소개 및 아키텍쳐" />
 <meta property="og:description" content="Apache Kudu 는 Columnar Storage로서, 실시간/대용량 데이터 분석이 가능한 저장 엔진이다. 여기에 Impala, Spark를 이용하여 쉽고 빠른 데이터 분석이 가능한 특징이 있다." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://krespo.github.io/posts/kudu/introducing_apache_kudu/" />
@@ -77,14 +74,9 @@
 				<h1>[Kudu] 1. 소개 및 아키텍쳐</h1>
 			</header>
 			<div class="content">
-				
-
-<p><img src="kudu_logo.png" alt="apache Kudu" /></p>
-
+				<p><img src="kudu_logo.png" alt="apache Kudu"></p>
 <p><a href="https://kudu.apache.org/docs/index.html">Apache Kudu</a> 는 Columnar Storage로서, 실시간/대용량 데이터 분석이 가능한 저장 엔진이다. 여기에 <code>Impala</code>, <code>Spark</code>를 이용하여 쉽고 빠른 데이터 분석이 가능한 특징이 있다.</p>
-
 <h2 id="1-kudu의-장점">1. Kudu의 장점<a href="#1-kudu의-장점" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
-
 <ul>
 <li>OLAP성 작업의 빠른 처리</li>
 <li>MapReduce, Spark 및 기타 Hadoop 에코 시스템 컴포넌트들과의 통합</li>
@@ -96,26 +88,25 @@
 <li>리더 태블릿의 오류가 발생하더라도 읽기 전용 팔로어 태블릿을 통해 읽기 서비스를 제공 가능함</li>
 <li>구조화 된 데이터 모델</li>
 </ul>
-
 <h2 id="2-kudu의-구성요소">2. Kudu의 구성요소<a href="#2-kudu의-구성요소" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
-
 <ul>
-<li><p>Table : 테이블은 데이터가 저장되는 장소이다. 테이블은 스키마와 전체적으로 정렬되어 있는 Primary key를 가지고 있다. 테이블은 <code>tablet</code> 이라고 불리는 세그먼트로 나뉘어 질 수 있다.</p></li>
-
-<li><p>Tablet : 태블릿은 다른 데이터 저장 엔진이나 관계형 데이터베이스의 파티션과 유사한 테이블의 연속적인 부분이다. 주어진 태블릿은 여러 개의 태블릿 서버에 복제되며, 주어진 시점에 이러한 복제품 중 하나가 리더 태블릿으로 간주된다. HBase의 Region과 유사함</p></li>
-
-<li><p>Tablet Server : 태블릿 서버는 태블릿을 저장하고, 클라이언트에게 데이터를 제공한다. HBase의 Region Server와 유사함</p></li>
-
-<li><p>Master : 마스터는 모든 카탈로그 테이블이라고 불리우는 태블릿과 태블릿 서버 메타 데이터와 클러스터 메타 데이터를 저장한다. Tablet과 마찬가지로 Raft Consensus Algorithm을 이용해 Master중 리더가 선출되며 선출된 마스터를 통해 메타데이터를 읽거나 쓸수 있다.</p></li>
+<li>
+<p>Table : 테이블은 데이터가 저장되는 장소이다. 테이블은 스키마와 전체적으로 정렬되어 있는 Primary key를 가지고 있다. 테이블은 <code>tablet</code> 이라고 불리는 세그먼트로 나뉘어 질 수 있다.</p>
+</li>
+<li>
+<p>Tablet : 태블릿은 다른 데이터 저장 엔진이나 관계형 데이터베이스의 파티션과 유사한 테이블의 연속적인 부분이다. 주어진 태블릿은 여러 개의 태블릿 서버에 복제되며, 주어진 시점에 이러한 복제품 중 하나가 리더 태블릿으로 간주된다. HBase의 Region과 유사함</p>
+</li>
+<li>
+<p>Tablet Server : 태블릿 서버는 태블릿을 저장하고, 클라이언트에게 데이터를 제공한다. HBase의 Region Server와 유사함</p>
+</li>
+<li>
+<p>Master : 마스터는 모든 카탈로그 테이블이라고 불리우는 태블릿과 태블릿 서버 메타 데이터와 클러스터 메타 데이터를 저장한다. Tablet과 마찬가지로 Raft Consensus Algorithm을 이용해 Master중 리더가 선출되며 선출된 마스터를 통해 메타데이터를 읽거나 쓸수 있다.</p>
+</li>
 </ul>
-
 <h2 id="3-kudu-architecture">3. Kudu Architecture<a href="#3-kudu-architecture" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
-
-<p><img src="kudu_architecture.png" alt="Kudu Architecture" /></p>
-
+<p><img src="kudu_architecture.png" alt="Kudu Architecture"></p>
 <p>위의 구성요소에서 설명한데로 Master와 Tablet은 하나의 마스터와 여러개의 Follow를 가지며, Replication 구성된 태블릿은 여러대의 Table Server에 분산 저장 되는것을 볼수 있다.</p>
-
-<h6 id="출처-https-kudu-apache-org-docs">출처: <a href="https://kudu.apache.org/docs/">https://kudu.apache.org/docs/</a><a href="#출처-https-kudu-apache-org-docs" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h6>
+<h6 id="출처-httpskuduapacheorgdocs">출처: <a href="https://kudu.apache.org/docs/">https://kudu.apache.org/docs/</a><a href="#출처-httpskuduapacheorgdocs" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h6>
 
 			</div>
 

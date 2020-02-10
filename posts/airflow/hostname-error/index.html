@@ -9,16 +9,13 @@
 	<meta name="msapplication-TileColor" content="#494f5c">
 <meta itemprop="name" content="[Airflow] macOS catalina에서 hostname does not match this instance&#39;s hostname 해결하기">
 <meta itemprop="description" content="얼마전 macOS Catalina버전으로 업그레이드 되면서 로컬에서 airflow가 정상적으로 동작하지 않는 문제가 생겼다. The recorded hostname [1m1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa[0m does not match this instance&rsquo;s hostname [1m1.0.0.127.in-addr.arpa 위의 에러 메">
-
-
 <meta itemprop="datePublished" content="2019-11-11T16:34:10&#43;09:00" />
 <meta itemprop="dateModified" content="2019-11-11T16:34:10&#43;09:00" />
-<meta itemprop="wordCount" content="934">
+<meta itemprop="wordCount" content="1004">
 
 
 
-<meta itemprop="keywords" content="airflow,workflow," />
-<meta property="og:title" content="[Airflow] macOS catalina에서 hostname does not match this instance&#39;s hostname 해결하기" />
+<meta itemprop="keywords" content="airflow,workflow," /><meta property="og:title" content="[Airflow] macOS catalina에서 hostname does not match this instance&#39;s hostname 해결하기" />
 <meta property="og:description" content="얼마전 macOS Catalina버전으로 업그레이드 되면서 로컬에서 airflow가 정상적으로 동작하지 않는 문제가 생겼다. The recorded hostname [1m1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa[0m does not match this instance&rsquo;s hostname [1m1.0.0.127.in-addr.arpa 위의 에러 메" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://krespo.github.io/posts/airflow/hostname-error/" />
@@ -77,123 +74,105 @@
 				<h1>[Airflow] macOS catalina에서 hostname does not match this instance&#39;s hostname 해결하기</h1>
 			</header>
 			<div class="content">
-				
-
-<p>얼마전 <code>macOS Catalina</code>버전으로 업그레이드 되면서 로컬에서 airflow가 정상적으로 동작하지 않는 문제가 생겼다.</p>
-
+				<p>얼마전 <code>macOS Catalina</code>버전으로 업그레이드 되면서 로컬에서 airflow가 정상적으로 동작하지 않는 문제가 생겼다.</p>
 <blockquote>
 <p>The recorded hostname [1m1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa[0m does not match this instance&rsquo;s hostname [1m1.0.0.127.in-addr.arpa</p>
 </blockquote>
-
 <p>위의 에러 메세지를 기준으로 airflow 코드를 들여다 보기로 했다.</p>
 <div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1">##  airflow/jobs/local_task_job.py</span>
-<span class="k">def</span> <span class="nf">heartbeat_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-    <span class="s2">&#34;&#34;&#34;Self destruct task if state has been moved away from running externally&#34;&#34;&#34;</span>
+<span class="k">def</span> <span class="nf">heartbeat_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span><span class="p">:</span>
+    <span class="sa"></span><span class="s2">&#34;&#34;&#34;</span><span class="s2">Self destruct task if state has been moved away from running externally</span><span class="s2">&#34;&#34;&#34;</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">terminating</span><span class="p">:</span>
         <span class="c1"># ensure termination if processes are created later</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">task_runner</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">task_runner</span><span class="o">.</span><span class="n">terminate</span><span class="p">(</span><span class="p">)</span>
         <span class="k">return</span>
 
-    <span class="bp">self</span><span class="o">.</span><span class="n">task_instance</span><span class="o">.</span><span class="n">refresh_from_db</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">task_instance</span><span class="o">.</span><span class="n">refresh_from_db</span><span class="p">(</span><span class="p">)</span>
     <span class="n">ti</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_instance</span>
 
-    <span class="n">fqdn</span> <span class="o">=</span> <span class="n">get_hostname</span><span class="p">()</span>
+    <span class="n">fqdn</span> <span class="o">=</span> <span class="n">get_hostname</span><span class="p">(</span><span class="p">)</span>
     <span class="n">same_hostname</span> <span class="o">=</span> <span class="n">fqdn</span> <span class="o">==</span> <span class="n">ti</span><span class="o">.</span><span class="n">get_hostname</span>                               <span class="c1">## &lt;==== 여기에서 문제 발생</span>
-    <span class="n">same_process</span> <span class="o">=</span> <span class="n">ti</span><span class="o">.</span><span class="n">pid</span> <span class="o">==</span> <span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">()</span>
+    <span class="n">same_process</span> <span class="o">=</span> <span class="n">ti</span><span class="o">.</span><span class="n">pid</span> <span class="o">==</span> <span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">(</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">ti</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="n">State</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">same_hostname</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&#34;The recorded hostname </span><span class="si">%s</span><span class="s2"> &#34;</span>
-                             <span class="s2">&#34;does not match this instance&#39;s hostname &#34;</span>
-                             <span class="s2">&#34;</span><span class="si">%s</span><span class="s2">&#34;</span><span class="p">,</span> <span class="n">ti</span><span class="o">.</span><span class="n">hostname</span><span class="p">,</span> <span class="n">fqdn</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="n">AirflowException</span><span class="p">(</span><span class="s2">&#34;Hostname of job runner does not match&#34;</span><span class="p">)</span></code></pre></div>
-<p>위의 코드에서 보면 <code>ti.get_hostname</code> 의 값과 <code>get_hostname()</code> 으로 얻어진 fqdn의 값이 달라 에러가 발생하는것으로 보였다.</p>
-
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa"></span><span class="s2">&#34;</span><span class="s2">The recorded hostname </span><span class="si">%s</span><span class="s2"> </span><span class="s2">&#34;</span>
+                             <span class="sa"></span><span class="s2">&#34;</span><span class="s2">does not match this instance</span><span class="s2">&#39;</span><span class="s2">s hostname </span><span class="s2">&#34;</span>
+                             <span class="sa"></span><span class="s2">&#34;</span><span class="si">%s</span><span class="s2">&#34;</span><span class="p">,</span> <span class="n">ti</span><span class="o">.</span><span class="n">hostname</span><span class="p">,</span> <span class="n">fqdn</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">AirflowException</span><span class="p">(</span><span class="sa"></span><span class="s2">&#34;</span><span class="s2">Hostname of job runner does not match</span><span class="s2">&#34;</span><span class="p">)</span>
+</code></pre></div><p>위의 코드에서 보면 <code>ti.get_hostname</code> 의 값과 <code>get_hostname()</code> 으로 얻어진 fqdn의 값이 달라 에러가 발생하는것으로 보였다.</p>
 <p>get_hostname()을 따라가 보면</p>
 <div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1">## airflow/utils/net.py</span>
 
-<span class="k">def</span> <span class="nf">get_hostname</span><span class="p">():</span>
-    <span class="s2">&#34;&#34;&#34;
-</span><span class="s2">    Fetch the hostname using the callable from the config or using
-</span><span class="s2">    `socket.getfqdn` as a fallback.
-</span><span class="s2">    &#34;&#34;&#34;</span>
+<span class="k">def</span> <span class="nf">get_hostname</span><span class="p">(</span><span class="p">)</span><span class="p">:</span>
+    <span class="sa"></span><span class="s2">&#34;&#34;&#34;</span><span class="s2">
+</span><span class="s2"></span><span class="s2">    Fetch the hostname using the callable from the config or using</span><span class="s2">
+</span><span class="s2"></span><span class="s2">    `socket.getfqdn` as a fallback.</span><span class="s2">
+</span><span class="s2"></span><span class="s2">    </span><span class="s2">&#34;&#34;&#34;</span>
     <span class="c1"># First we attempt to fetch the callable path from the config.</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">callable_path</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;core&#39;</span><span class="p">,</span> <span class="s1">&#39;hostname_callable&#39;</span><span class="p">)</span>			<span class="c1">## &lt;== airflow.cfg에서 hostname_callable 설정값을 읽는다.</span>
+        <span class="n">callable_path</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1">core</span><span class="s1">&#39;</span><span class="p">,</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1">hostname_callable</span><span class="s1">&#39;</span><span class="p">)</span>			<span class="c1">## &lt;== airflow.cfg에서 hostname_callable 설정값을 읽는다.</span>
     <span class="k">except</span> <span class="n">AirflowConfigException</span><span class="p">:</span>
         <span class="n">callable_path</span> <span class="o">=</span> <span class="bp">None</span>
 
     <span class="c1"># Then we handle the case when the config is missing or empty. This is the</span>
     <span class="c1"># default behavior.</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">callable_path</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">socket</span><span class="o">.</span><span class="n">getfqdn</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">socket</span><span class="o">.</span><span class="n">getfqdn</span><span class="p">(</span><span class="p">)</span>
 
     <span class="c1"># Since we have a callable path, we try to import and run it next.</span>
-    <span class="n">module_path</span><span class="p">,</span> <span class="n">attr_name</span> <span class="o">=</span> <span class="n">callable_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+    <span class="n">module_path</span><span class="p">,</span> <span class="n">attr_name</span> <span class="o">=</span> <span class="n">callable_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1">:</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">module_path</span><span class="p">)</span>
     <span class="nb">callable</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nb">callable</span><span class="p">()</span></code></pre></div>
-<p>코드를 보면 airflow.cfg 파일에 <code>hostname_callable</code>이란 설정값을 읽어 모듈을 로드하여 호스트명을 얻는것으로 보인다.</p>
-
+    <span class="k">return</span> <span class="nb">callable</span><span class="p">(</span><span class="p">)</span>
+</code></pre></div><p>코드를 보면 airflow.cfg 파일에 <code>hostname_callable</code>이란 설정값을 읽어 모듈을 로드하여 호스트명을 얻는것으로 보인다.</p>
 <p>airflow.cfg 파일을 엵어보면 기본으로 <code>socket.getfqdn</code>을 읽어 호스트명을 가져오는것을 볼수 있다.</p>
-
 <pre><code># Hostname by providing a path to a callable, which will resolve the hostname
 # The format is &quot;package:function&quot;. For example,
 # default value &quot;socket:getfqdn&quot; means that result from getfqdn() of &quot;socket&quot; package will be used as hostname
 # No argument should be required in the function specified.
 # If using IP address as hostname is preferred, use value &quot;airflow.utils.net:get_host_ip_address&quot;
 hostname_callable = socket:getfqdn
-</code></pre>
-
-<p>즉 <code>socket.getfqdn</code>을 호출시 macOS 카탈리나 이전버전에서는 문제 없이 가져오던 부분이 os가 버전 업데이트 되면서 문제가 발생한것으로 보인다.
+</code></pre><p>즉 <code>socket.getfqdn</code>을 호출시 macOS 카탈리나 이전버전에서는 문제 없이 가져오던 부분이 os가 버전 업데이트 되면서 문제가 발생한것으로 보인다.
 그래서 설정파일에서 예시로 보여준것처럼 <code>airflow.utils.net:get_host_ip_address</code>를 사용해 보려고 했지만 에러가 발생했다.</p>
-
 <p>결론적으로</p>
-
 <blockquote>
 <p>ip나 hostname을 가져오는 커스텀 코드를 작성하여 hostname_callable에 등록</p>
 </blockquote>
-
 <p>하는 식으로 처리하기로 했다.</p>
-
-<h3 id="1-airflow-home-custom-디렉토리-생성-후-하위에-net-utiles-py-를-생성">1. ${AIRFLOW_HOME}/custom 디렉토리 생성 후 하위에 <code>net_utiles.py</code>를 생성<a href="#1-airflow-home-custom-디렉토리-생성-후-하위에-net-utiles-py-를-생성" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
-<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="s1">&#39;&#39;&#39;
-</span><span class="s1">아래의 경로에 저장
-</span><span class="s1">${AIRFLOW_HOME}/custom/__init__.py
-</span><span class="s1">					  /net_utils.py
-</span><span class="s1">
-</span><span class="s1">&#39;&#39;&#39;</span>
+<h3 id="1-airflow_homecustom-디렉토리-생성-후-하위에-net_utilespy를-생성">1. ${AIRFLOW_HOME}/custom 디렉토리 생성 후 하위에 <code>net_utiles.py</code>를 생성<a href="#1-airflow_homecustom-디렉토리-생성-후-하위에-net_utilespy를-생성" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="sa"></span><span class="s1">&#39;&#39;&#39;</span><span class="s1">
+</span><span class="s1"></span><span class="s1">아래의 경로에 저장</span><span class="s1">
+</span><span class="s1"></span><span class="s1">${AIRFLOW_HOME}/custom/__init__.py</span><span class="s1">
+</span><span class="s1"></span><span class="s1">					  /net_utils.py</span><span class="s1">
+</span><span class="s1"></span><span class="s1">
+</span><span class="s1"></span><span class="s1">&#39;&#39;&#39;</span>
 <span class="kn">import</span> <span class="nn">socket</span>
 
 
-<span class="k">def</span> <span class="nf">get_hostname</span><span class="p">():</span>
-    <span class="k">return</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">())</span></code></pre></div>
-<h3 id="2-setuptools-를-이용하여-모듈-등록">2. <code>setuptools</code>를 이용하여 모듈 등록<a href="#2-setuptools-를-이용하여-모듈-등록" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<span class="k">def</span> <span class="nf">get_hostname</span><span class="p">(</span><span class="p">)</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">(</span><span class="p">)</span><span class="p">)</span>
 
+</code></pre></div><h3 id="2-setuptools를-이용하여-모듈-등록">2. <code>setuptools</code>를 이용하여 모듈 등록<a href="#2-setuptools를-이용하여-모듈-등록" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>${AIRFLOW_HOME}/setup.py 생성</p>
 <div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">setuptools</span> <span class="kn">import</span> <span class="n">setup</span><span class="p">,</span> <span class="n">find_packages</span>
 
 <span class="n">setup</span><span class="p">(</span>
-    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;airflow&#39;</span><span class="p">,</span>
-    <span class="n">version</span><span class="o">=</span><span class="s1">&#39;1.0&#39;</span><span class="p">,</span>
-    <span class="n">packages</span><span class="o">=</span><span class="n">find_packages</span><span class="p">(),</span>
+    <span class="n">name</span><span class="o">=</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1">airflow</span><span class="s1">&#39;</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1">1.0</span><span class="s1">&#39;</span><span class="p">,</span>
+    <span class="n">packages</span><span class="o">=</span><span class="n">find_packages</span><span class="p">(</span><span class="p">)</span><span class="p">,</span>
     <span class="n">include_package_data</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
     <span class="n">zip_safe</span><span class="o">=</span><span class="bp">False</span>
-<span class="p">)</span></code></pre></div>
-<p>find_packages를 통해 1에서 생성한 custom 폴더를 접근할수 있도록 변경해 준다.</p>
-
+<span class="p">)</span>
+</code></pre></div><p>find_packages를 통해 1에서 생성한 custom 폴더를 접근할수 있도록 변경해 준다.</p>
 <p>그후</p>
-<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="err">$</span> <span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span></code></pre></div>
-<p>을 실행하여 커스텀 코드를 PYTHONPATH에 추가해준다.</p>
-
-<h3 id="3-airflow-cfg에-hostname-callable-수정">3. airflow.cfg에 <code>hostname_callable</code> 수정<a href="#3-airflow-cfg에-hostname-callable-수정" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
-
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="err">$</span> <span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
+</code></pre></div><p>을 실행하여 커스텀 코드를 PYTHONPATH에 추가해준다.</p>
+<h3 id="3-airflowcfg에-hostname_callable-수정">3. airflow.cfg에 <code>hostname_callable</code> 수정<a href="#3-airflowcfg에-hostname_callable-수정" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <pre><code>#hostname_callable = socket:getfqdn
 hostname_callable = custom.net_utils:get_hostname
-</code></pre>
-
-<p>위와 같이 설정 후 webserver, scheduler를 재실행 하면 ip4 기반으로 작동시킬 수 있다.</p>
+</code></pre><p>위와 같이 설정 후 webserver, scheduler를 재실행 하면 ip4 기반으로 작동시킬 수 있다.</p>
 
 			</div>
 

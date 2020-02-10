@@ -9,16 +9,13 @@
 	<meta name="msapplication-TileColor" content="#494f5c">
 <meta itemprop="name" content="1. Azkaban 설치">
 <meta itemprop="description" content="준비 1. OpenJDK 설치 $ sudo yum install java-1.8.0-openjdk java-1.8.0-openjdk-devel $ readlink /etc/alternatives/java ##java 위치 확인 /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.222.b10-1.el7_7.x86_64/jre/bin/java ## 위 경로중 jre까지의 경로로 JAVA_HOME 환경변수를 잡아준다. $ echo &#39;export JAVA_HOME=&#34;/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.222.b10-1.el7_7.x86_64/jre&#34;&#39; &gt;&gt; ~/.bash_profile $ echo &#39;export PATH=$PATH:$JAVA_HOME/bin:&#39; &gt;&gt; ~/.bash_profile $ source ~/.bash_profile 준비 2. JavaFX 설치 Azk">
-
-
 <meta itemprop="datePublished" content="2019-10-31T18:11:20&#43;09:00" />
 <meta itemprop="dateModified" content="2019-10-31T18:11:20&#43;09:00" />
 <meta itemprop="wordCount" content="320">
 
 
 
-<meta itemprop="keywords" content="azkaban,workflow," />
-<meta property="og:title" content="1. Azkaban 설치" />
+<meta itemprop="keywords" content="azkaban,workflow," /><meta property="og:title" content="1. Azkaban 설치" />
 <meta property="og:description" content="준비 1. OpenJDK 설치 $ sudo yum install java-1.8.0-openjdk java-1.8.0-openjdk-devel $ readlink /etc/alternatives/java ##java 위치 확인 /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.222.b10-1.el7_7.x86_64/jre/bin/java ## 위 경로중 jre까지의 경로로 JAVA_HOME 환경변수를 잡아준다. $ echo &#39;export JAVA_HOME=&#34;/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.222.b10-1.el7_7.x86_64/jre&#34;&#39; &gt;&gt; ~/.bash_profile $ echo &#39;export PATH=$PATH:$JAVA_HOME/bin:&#39; &gt;&gt; ~/.bash_profile $ source ~/.bash_profile 준비 2. JavaFX 설치 Azk" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://krespo.github.io/posts/azkaban/1-azkaban/" />
@@ -77,9 +74,7 @@
 				<h1>1. Azkaban 설치</h1>
 			</header>
 			<div class="content">
-				
-
-<h3 id="준비-1-openjdk-설치">준비 1. OpenJDK 설치<a href="#준비-1-openjdk-설치" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+				<h3 id="준비-1-openjdk-설치">준비 1. OpenJDK 설치<a href="#준비-1-openjdk-설치" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ sudo yum install java-1.8.0-openjdk java-1.8.0-openjdk-devel
 $ readlink /etc/alternatives/java <span class="c1">##java 위치 확인</span>
 /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.222.b10-1.el7_7.x86_64/jre/bin/java
@@ -87,21 +82,18 @@ $ readlink /etc/alternatives/java <span class="c1">##java 위치 확인</span>
 <span class="c1">## 위 경로중 jre까지의 경로로 JAVA_HOME 환경변수를 잡아준다.</span>
 $ <span class="nb">echo</span> <span class="s1">&#39;export JAVA_HOME=&#34;/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.222.b10-1.el7_7.x86_64/jre&#34;&#39;</span> &gt;&gt; ~/.bash_profile
 $ <span class="nb">echo</span> <span class="s1">&#39;export PATH=$PATH:$JAVA_HOME/bin:&#39;</span> &gt;&gt; ~/.bash_profile
-$ <span class="nb">source</span> ~/.bash_profile</code></pre></div>
-<h3 id="준비-2-javafx-설치">준비 2. JavaFX 설치<a href="#준비-2-javafx-설치" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+$ <span class="nb">source</span> ~/.bash_profile
 
+</code></pre></div><h3 id="준비-2-javafx-설치">준비 2. JavaFX 설치<a href="#준비-2-javafx-설치" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>Azkaban은 JavaFX 모듈의 클래스를 일부를 사용한다. 그렇기 때문에 JavaFX를 설치해 주어야 하는데, Oralce JDK는 JavaFX가 기본적으로 포함이 되어서 JavaFX를 설치 하지 않아도 되지만, OpenJDK는 JavaFX 모듈이 빠져있어, 추가적으로 설치해줘야 한다.</p>
-
 <ol>
 <li><a href="https://gluonhq.com/products/javafx/">https://gluonhq.com/products/javafx/</a> 에서 JavaFX Linux SDK LTS 버전 다운로드(현재 11.0.4 버전)</li>
-
-<li><p>아래의 커맨드를 이용하여 JavaFX모듈 복사</p>
+<li>아래의 커맨드를 이용하여 JavaFX모듈 복사</li>
+</ol>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ unzip openjfx-11.0.2_linux-x64_bin-sdk.zip
 $ <span class="nb">cd</span> javafx-sdk-11.0.1
-$ sudo cp -arf lib/* <span class="si">${</span><span class="nv">JAVA_HOME</span><span class="si">}</span>/lib/</code></pre></div></li>
-</ol>
-
-<h2 id="azkaban-설치">Azkaban 설치<a href="#azkaban-설치" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+$ sudo cp -arf lib/* <span class="si">${</span><span class="nv">JAVA_HOME</span><span class="si">}</span>/lib/
+</code></pre></div><h2 id="azkaban-설치">Azkaban 설치<a href="#azkaban-설치" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ git clone https://github.com/azkaban/azkaban.git
 $ <span class="nb">cd</span> azkaban
 
@@ -116,7 +108,8 @@ $ ./gradlew clean
 $ ./gradlew build installDist -x <span class="nb">test</span>
 
 <span class="c1">## Azkaban 실행</span>
-<span class="nb">cd</span> azkaban-solo-server/build/install/azkaban-solo-server<span class="p">;</span> bin/start-solo.sh</code></pre></div>
+<span class="nb">cd</span> azkaban-solo-server/build/install/azkaban-solo-server<span class="p">;</span> bin/start-solo.sh
+</code></pre></div>
 			</div>
 
 			<hr class="post-end">

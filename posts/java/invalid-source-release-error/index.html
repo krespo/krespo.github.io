@@ -9,16 +9,13 @@
 	<meta name="msapplication-TileColor" content="#494f5c">
 <meta itemprop="name" content="[Java] invalid source release 에러 해결">
 <meta itemprop="description" content="Error:java: invalid source release: 11 프로젝트를 진행하다보면 위와같은 에러를 보일때가 있는데, Intellij의 설정을 수정하여 해결할 수 있다. 1. Language Level 수정 Intellij에서 File">
-
-
 <meta itemprop="datePublished" content="2020-01-02T10:21:11&#43;09:00" />
 <meta itemprop="dateModified" content="2020-01-02T10:21:11&#43;09:00" />
 <meta itemprop="wordCount" content="326">
 
 
 
-<meta itemprop="keywords" content="Java,Maven,IntelliJ," />
-<meta property="og:title" content="[Java] invalid source release 에러 해결" />
+<meta itemprop="keywords" content="Java,Maven,IntelliJ," /><meta property="og:title" content="[Java] invalid source release 에러 해결" />
 <meta property="og:description" content="Error:java: invalid source release: 11 프로젝트를 진행하다보면 위와같은 에러를 보일때가 있는데, Intellij의 설정을 수정하여 해결할 수 있다. 1. Language Level 수정 Intellij에서 File" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://krespo.github.io/posts/java/invalid-source-release-error/" />
@@ -77,63 +74,50 @@
 				<h1>[Java] invalid source release 에러 해결</h1>
 			</header>
 			<div class="content">
-				
-
-<blockquote>
+				<blockquote>
 <p>Error:java: invalid source release: 11</p>
 </blockquote>
-
 <p>프로젝트를 진행하다보면 위와같은 에러를 보일때가 있는데, Intellij의 설정을 수정하여 해결할 수 있다.</p>
-
 <h2 id="1-language-level-수정">1. Language Level 수정<a href="#1-language-level-수정" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
-
 <p>Intellij에서 <code>File -&gt; Project Structure -&gt; Project Settings -&gt; Project</code> 메뉴의 <code>Project Language Level</code> 을 수정한다</p>
-
-<p><img src="error1.png" alt="error1" /></p>
-
+<p><img src="error1.png" alt="error1"></p>
 <p>그리고 <code>File -&gt; Project Structure -&gt; Project Settings -&gt; Modules</code> 메뉴의 <code>Source Language Level</code>을 수정한다.</p>
-
-<p><img src="error2.png" alt="error2" /></p>
-
+<p><img src="error2.png" alt="error2"></p>
 <h2 id="2-java-compiler-수정">2. Java Compiler 수정<a href="#2-java-compiler-수정" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
-
 <p>Intellij에서 <code>Preference -&gt; Build,Execution,Deployment -&gt; Compiler -&gt; Java Compiler</code>의 <code>Target bytescode version</code>을 수정해준다.</p>
-
-<p><img src="error3.png" alt="error3" /></p>
-
+<p><img src="error3.png" alt="error3"></p>
 <h2 id="3-maven-설정-추가">3. Maven 설정 추가<a href="#3-maven-설정-추가" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
-
 <p>위와 같이 수정을 하면 동작을 하는데, 빌드를 수행하거나, 메이븐 설정이 변경되어 내부적으로 refresh가 되는경우 위의 모든 설정이 초기값으로 변경된다. 이때는 maven에 설정을 통해 버전을 지정해 줄 수 있다.</p>
-
 <p>방법 1. properties 수정</p>
-<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;project&gt;</span>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;project</span><span class="nt">&gt;</span>
   [...]
-  <span class="nt">&lt;properties&gt;</span>
-    <span class="nt">&lt;maven.compiler.source&gt;</span>1.8<span class="nt">&lt;/maven.compiler.source&gt;</span>
-    <span class="nt">&lt;maven.compiler.target&gt;</span>1.8<span class="nt">&lt;/maven.compiler.target&gt;</span>
+  <span class="nt">&lt;properties</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;maven.compiler.source</span><span class="nt">&gt;</span>1.8<span class="nt">&lt;/maven.compiler.source&gt;</span>
+    <span class="nt">&lt;maven.compiler.target</span><span class="nt">&gt;</span>1.8<span class="nt">&lt;/maven.compiler.target&gt;</span>
   <span class="nt">&lt;/properties&gt;</span>
   [...]
-<span class="nt">&lt;/project&gt;</span></code></pre></div>
-<p>방법 2. maven-compiler-plugin에 버전 지정</p>
-<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;project&gt;</span>
+<span class="nt">&lt;/project&gt;</span>
+</code></pre></div><p>방법 2. maven-compiler-plugin에 버전 지정</p>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;project</span><span class="nt">&gt;</span>
   [...]
-  <span class="nt">&lt;build&gt;</span>
+  <span class="nt">&lt;build</span><span class="nt">&gt;</span>
     [...]
-    <span class="nt">&lt;plugins&gt;</span>
-      <span class="nt">&lt;plugin&gt;</span>
-        <span class="nt">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="nt">&lt;/groupId&gt;</span>
-        <span class="nt">&lt;artifactId&gt;</span>maven-compiler-plugin<span class="nt">&lt;/artifactId&gt;</span>
-        <span class="nt">&lt;version&gt;</span>3.8.1<span class="nt">&lt;/version&gt;</span>
-        <span class="nt">&lt;configuration&gt;</span>
-          <span class="nt">&lt;source&gt;</span>1.8<span class="nt">&lt;/source&gt;</span>
-          <span class="nt">&lt;target&gt;</span>1.8<span class="nt">&lt;/target&gt;</span>
+    <span class="nt">&lt;plugins</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;plugin</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;groupId</span><span class="nt">&gt;</span>org.apache.maven.plugins<span class="nt">&lt;/groupId&gt;</span>
+        <span class="nt">&lt;artifactId</span><span class="nt">&gt;</span>maven-compiler-plugin<span class="nt">&lt;/artifactId&gt;</span>
+        <span class="nt">&lt;version</span><span class="nt">&gt;</span>3.8.1<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;configuration</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;source</span><span class="nt">&gt;</span>1.8<span class="nt">&lt;/source&gt;</span>
+          <span class="nt">&lt;target</span><span class="nt">&gt;</span>1.8<span class="nt">&lt;/target&gt;</span>
         <span class="nt">&lt;/configuration&gt;</span>
       <span class="nt">&lt;/plugin&gt;</span>
     <span class="nt">&lt;/plugins&gt;</span>
     [...]
   <span class="nt">&lt;/build&gt;</span>
   [...]
-<span class="nt">&lt;/project&gt;</span></code></pre></div>
+<span class="nt">&lt;/project&gt;</span>
+</code></pre></div>
 			</div>
 
 			<hr class="post-end">

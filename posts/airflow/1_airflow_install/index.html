@@ -9,16 +9,13 @@
 	<meta name="msapplication-TileColor" content="#494f5c">
 <meta itemprop="name" content="[Airflow] 설치">
 <meta itemprop="description" content="설치 환경 CentOS 7.7 airflow 1.10.5 airflow는 단일 서버에서 설치하는 방법외에 python celery모듈을 이용하여 webserver와 worker서버를 분리 할수 있다.">
-
-
 <meta itemprop="datePublished" content="2019-11-04T11:34:19&#43;09:00" />
 <meta itemprop="dateModified" content="2019-11-04T11:34:19&#43;09:00" />
-<meta itemprop="wordCount" content="1473">
+<meta itemprop="wordCount" content="1464">
 
 
 
-<meta itemprop="keywords" content="airflow,workflow," />
-<meta property="og:title" content="[Airflow] 설치" />
+<meta itemprop="keywords" content="airflow,workflow," /><meta property="og:title" content="[Airflow] 설치" />
 <meta property="og:description" content="설치 환경 CentOS 7.7 airflow 1.10.5 airflow는 단일 서버에서 설치하는 방법외에 python celery모듈을 이용하여 webserver와 worker서버를 분리 할수 있다." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://krespo.github.io/posts/airflow/1_airflow_install/" />
@@ -77,37 +74,27 @@
 				<h1>[Airflow] 설치</h1>
 			</header>
 			<div class="content">
-				
-
-<h1 id="설치-환경">설치 환경<a href="#설치-환경" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
-
+				<h1 id="설치-환경">설치 환경<a href="#설치-환경" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
 <ol>
 <li>CentOS 7.7</li>
 <li>airflow 1.10.5</li>
 </ol>
-
 <p>airflow는 단일 서버에서 설치하는 방법외에 <a href="http://www.celeryproject.org/">python celery모듈</a>을 이용하여 webserver와 worker서버를 분리 할수 있다.
 아래는 webserver 1대와 worker서버 2대에 설치하는방법이며, 이때 Celery를 이용하여 multiple worker를 설정하려면 추가적으로 Redis 또는 RabbitMQ, Mysql 서버를 추가적으로 필요로 한다.</p>
-
 <p>보통의 구성으로는</p>
-
 <ul>
 <li>web server: airflow webserver, airflow scheduler, mysql, redis 설치</li>
 <li>worker server : airflow worker
 와 같은 식으로 설치한다.</li>
 </ul>
-
 <h1 id="airflow-모듈">airflow 모듈<a href="#airflow-모듈" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
-
 <p>airflow는 역할에 따라 몇가지 모듈이 존재한다.</p>
-
 <ul>
 <li>airflow webserver: 웹UI를 통해 workflow를 컨트롤 하기 위함</li>
 <li>airflow scheduler: DAG 파일을 통록된 workflow를 지정된 시간에 동작시키는 역할</li>
 <li>airflow worker: scheduler에 의해 할당된 workflow를 실제로 동작시킴</li>
 <li>airflow kerberos(옵션) : 만약 kerberos 인증된 데이터소스(ex- 하둡)에 접근할때 커버로스 인증티켓을 주기적으로 갱신하기 위함</li>
 </ul>
-
 <h1 id="사전설치">사전설치<a href="#사전설치" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1">## 파이썬 3.6 설치 및 virtualenv 설치</span>
 $ sudo yum install -y python3 python3-devel
@@ -123,8 +110,8 @@ $ sudo yum install -y gcc gcc-c++ cyrus-sasl-devel mysql-devel
 <span class="c1">## 따라서 .env 파일을 만들고 virtualenv activate를 써주면 매번 activate를 해줄필요 없이 자동으로 처리된다.</span>
 $ sudo pip3 install autoenv
 $ <span class="nb">echo</span> <span class="s2">&#34;source `which activate.sh`&#34;</span> &gt;&gt; ~/.bash_profile
-$ <span class="nb">source</span> ~/.bash_profile</code></pre></div>
-<h1 id="1-airflow-설치-모든-서버">1. airflow 설치 (모든 서버)<a href="#1-airflow-설치-모든-서버" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+$ <span class="nb">source</span> ~/.bash_profile
+</code></pre></div><h1 id="1-airflow-설치-모든-서버">1. airflow 설치 (모든 서버)<a href="#1-airflow-설치-모든-서버" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ mkdir <span class="si">${</span><span class="nv">airflow</span><span class="p"> 설치 디렉토리</span><span class="si">}</span>
 
 <span class="c1">## airflow_home 환경변수 지정, 지정된 위치에 airflow가 설치되게 된다.</span>
@@ -150,7 +137,7 @@ autoenv:     --- <span class="o">(</span>end contents<span class="o">)</span> --
 autoenv:
 autoenv: Are you sure you want to allow this? <span class="o">(</span>y/N<span class="o">)</span> y
 
-$ pip3 install apache-airflow<span class="o">==</span><span class="m">1</span>.10.5
+$ pip3 install apache-airflow<span class="o">=</span><span class="o">=</span>1.10.5
 
 <span class="c1">## initdb를 하면 초기 설정파일이 airflow_home에 생성된다.</span>
 $ airflow initdb
@@ -160,14 +147,14 @@ $ ls -ah
 .env  airflow.cfg  airflow.db	dags  logs  unittests.cfg  venv 
 
 <span class="c1">## 추가 모듈 설치</span>
-pip3 install apache-airflow<span class="o">[</span>hive<span class="o">]==</span><span class="m">1</span>.10.5
+pip3 install apache-airflow<span class="o">[</span>hive<span class="o">]</span><span class="o">=</span><span class="o">=</span>1.10.5
 <span class="c1">## 만약 OSError: mysql_config not found 에러가 발생하면 sudo yum install mysql-devel을 설치한다.</span>
-pip3 install apache-airflow<span class="o">[</span>mysql<span class="o">]==</span><span class="m">1</span>.10.5
-pip3 install apache-airflow<span class="o">[</span>celery<span class="o">]==</span><span class="m">1</span>.10.5
-pip3 install sasl</code></pre></div>
-<p>추가적으로 Redis와 Mysql을 설치해야하는데, 필자는 사내에서 사용하는 Redis와 Mysql 인스턴스가 있어 따로 설치법을 작성하지 않겠다.
-Redis 설치법은 <a href="https://redis.io/download">여기</a>를, Mysql 설치법은 <a href="https://opentutorials.org/module/1701/10229">여기</a>를 참고하면 되겠다.</p>
+pip3 install apache-airflow<span class="o">[</span>mysql<span class="o">]</span><span class="o">=</span><span class="o">=</span>1.10.5
+pip3 install apache-airflow<span class="o">[</span>celery<span class="o">]</span><span class="o">=</span><span class="o">=</span>1.10.5
+pip3 install sasl
 
+</code></pre></div><p>추가적으로 Redis와 Mysql을 설치해야하는데, 필자는 사내에서 사용하는 Redis와 Mysql 인스턴스가 있어 따로 설치법을 작성하지 않겠다.
+Redis 설치법은 <a href="https://redis.io/download">여기</a>를, Mysql 설치법은 <a href="https://opentutorials.org/module/1701/10229">여기</a>를 참고하면 되겠다.</p>
 <h1 id="2-airflow-설정-모든-서버">2. Airflow 설정 (모든 서버)<a href="#2-airflow-설정-모든-서버" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">vi ./airflow.cfg
 
@@ -177,87 +164,79 @@ Redis 설치법은 <a href="https://redis.io/download">여기</a>를, Mysql 설�
 <span class="nv">sql_alchemy_conn</span> <span class="o">=</span> mysql://<span class="o">{</span>db user<span class="o">}</span>:<span class="o">{</span>db pw<span class="o">}</span>@호스트:아이피/<span class="o">{</span>database<span class="o">}</span>
 <span class="nv">load_examples</span> <span class="o">=</span> False
 <span class="nv">broker_url</span> <span class="o">=</span> redis://:<span class="o">{</span>Redis pw<span class="o">}</span>@<span class="o">{</span>Redis Host<span class="o">}</span>:<span class="o">{</span>Redis port<span class="o">}</span>/0
-<span class="nv">result_backend</span> <span class="o">=</span> db+mysql://<span class="o">{</span>db user<span class="o">}</span>:<span class="o">{</span>db pw<span class="o">}</span>@호스트:아이피/<span class="o">{</span>database<span class="o">}</span></code></pre></div>
-<p>설정 완료 후 mysql에 각종 테이블들을 생성한다. <em>이는 하나의 서버에서만 진행한다.</em></p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ airflow initdb</code></pre></div>
-<h1 id="3-실행">3. 실행<a href="#3-실행" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
-
+<span class="nv">result_backend</span> <span class="o">=</span> db+mysql://<span class="o">{</span>db user<span class="o">}</span>:<span class="o">{</span>db pw<span class="o">}</span>@호스트:아이피/<span class="o">{</span>database<span class="o">}</span>
+</code></pre></div><p>설정 완료 후 mysql에 각종 테이블들을 생성한다. <em>이는 하나의 서버에서만 진행한다.</em></p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ airflow initdb
+</code></pre></div><h1 id="3-실행">3. 실행<a href="#3-실행" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
 <h3 id="webserver-용-서버">webserver 용 서버<a href="#webserver-용-서버" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
-
 <ul>
 <li>nohup airflow webserver &gt; /dev/null 2&gt;&amp;1 &amp;</li>
 <li>nohup airflow scheduler &gt; /dev/null 2&gt;&amp;1 &amp;</li>
 </ul>
-
 <h3 id="worker-용서버">worker 용서버<a href="#worker-용서버" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
-
 <ul>
 <li>nohup airflow worker &gt; /dev/null 2&gt;&amp;1 &amp;</li>
 </ul>
-
 <h1 id="4-dag-테스트">4. DAG 테스트<a href="#4-dag-테스트" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
-
 <p>아래는 <a href="https://airflow.apache.org/tutorial.html">airflow 홈</a>에 있는 예제를 약간 수정한 코드이다. 이 코드를 tutorial.py로 저장하고 각서버(webserver, worker) dags 폴더에 넣어보자.</p>
-<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="s2">&#34;&#34;&#34;
-</span><span class="s2">Code that goes along with the Airflow tutorial located at:
-</span><span class="s2">https://github.com/apache/airflow/blob/master/airflow/example_dags/tutorial.py
-</span><span class="s2">&#34;&#34;&#34;</span>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="sa"></span><span class="s2">&#34;&#34;&#34;</span><span class="s2">
+</span><span class="s2"></span><span class="s2">Code that goes along with the Airflow tutorial located at:</span><span class="s2">
+</span><span class="s2"></span><span class="s2">https://github.com/apache/airflow/blob/master/airflow/example_dags/tutorial.py</span><span class="s2">
+</span><span class="s2"></span><span class="s2">&#34;&#34;&#34;</span>
 <span class="kn">from</span> <span class="nn">airflow</span> <span class="kn">import</span> <span class="n">DAG</span>
 <span class="kn">from</span> <span class="nn">airflow.operators.bash_operator</span> <span class="kn">import</span> <span class="n">BashOperator</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 
 
 <span class="n">default_args</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;owner&#39;</span><span class="p">:</span> <span class="s1">&#39;Airflow&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;depends_on_past&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
-    <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-    <span class="s1">&#39;email&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;airflow@example.com&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;email_on_failure&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
-    <span class="s1">&#39;email_on_retry&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
-    <span class="s1">&#39;retries&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s1">&#39;retry_delay&#39;</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
-    <span class="s1">&#39;catchup&#39;</span><span class="p">:</span> <span class="bp">False</span>
+    <span class="sa"></span><span class="s1">&#39;</span><span class="s1">owner</span><span class="s1">&#39;</span><span class="p">:</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1">Airflow</span><span class="s1">&#39;</span><span class="p">,</span>
+    <span class="sa"></span><span class="s1">&#39;</span><span class="s1">depends_on_past</span><span class="s1">&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+    <span class="sa"></span><span class="s1">&#39;</span><span class="s1">start_date</span><span class="s1">&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="p">,</span>
+    <span class="sa"></span><span class="s1">&#39;</span><span class="s1">email</span><span class="s1">&#39;</span><span class="p">:</span> <span class="p">[</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1">airflow@example.com</span><span class="s1">&#39;</span><span class="p">]</span><span class="p">,</span>
+    <span class="sa"></span><span class="s1">&#39;</span><span class="s1">email_on_failure</span><span class="s1">&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+    <span class="sa"></span><span class="s1">&#39;</span><span class="s1">email_on_retry</span><span class="s1">&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+    <span class="sa"></span><span class="s1">&#39;</span><span class="s1">retries</span><span class="s1">&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="sa"></span><span class="s1">&#39;</span><span class="s1">retry_delay</span><span class="s1">&#39;</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span><span class="p">,</span>
+    <span class="sa"></span><span class="s1">&#39;</span><span class="s1">catchup</span><span class="s1">&#39;</span><span class="p">:</span> <span class="bp">False</span>
     <span class="c1"># &#39;queue&#39;: &#39;bash_queue&#39;,</span>
     <span class="c1"># &#39;pool&#39;: &#39;backfill&#39;,</span>
     <span class="c1"># &#39;priority_weight&#39;: 10,</span>
     <span class="c1"># &#39;end_date&#39;: datetime(2016, 1, 1),</span>
 <span class="p">}</span>
 
-<span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="s1">&#39;tutorial&#39;</span><span class="p">,</span> <span class="n">default_args</span><span class="o">=</span><span class="n">default_args</span><span class="p">,</span> <span class="n">schedule_interval</span><span class="o">=</span><span class="s1">&#39;@once&#39;</span><span class="p">)</span>
+<span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1">tutorial</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">default_args</span><span class="o">=</span><span class="n">default_args</span><span class="p">,</span> <span class="n">schedule_interval</span><span class="o">=</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1">@once</span><span class="s1">&#39;</span><span class="p">)</span>
 
 <span class="c1"># t1, t2 and t3 are examples of tasks created by instantiating operators</span>
 <span class="n">t1</span> <span class="o">=</span> <span class="n">BashOperator</span><span class="p">(</span>
-    <span class="n">task_id</span><span class="o">=</span><span class="s1">&#39;print_date&#39;</span><span class="p">,</span>
-    <span class="n">bash_command</span><span class="o">=</span><span class="s1">&#39;date&#39;</span><span class="p">,</span>
+    <span class="n">task_id</span><span class="o">=</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1">print_date</span><span class="s1">&#39;</span><span class="p">,</span>
+    <span class="n">bash_command</span><span class="o">=</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1">date</span><span class="s1">&#39;</span><span class="p">,</span>
     <span class="n">dag</span><span class="o">=</span><span class="n">dag</span><span class="p">)</span>
 
 <span class="n">t2</span> <span class="o">=</span> <span class="n">BashOperator</span><span class="p">(</span>
-    <span class="n">task_id</span><span class="o">=</span><span class="s1">&#39;sleep&#39;</span><span class="p">,</span>
-    <span class="n">bash_command</span><span class="o">=</span><span class="s1">&#39;sleep 5&#39;</span><span class="p">,</span>
+    <span class="n">task_id</span><span class="o">=</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1">sleep</span><span class="s1">&#39;</span><span class="p">,</span>
+    <span class="n">bash_command</span><span class="o">=</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1">sleep 5</span><span class="s1">&#39;</span><span class="p">,</span>
     <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
     <span class="n">dag</span><span class="o">=</span><span class="n">dag</span><span class="p">)</span>
 
-<span class="n">templated_command</span> <span class="o">=</span> <span class="s2">&#34;&#34;&#34;
-</span><span class="s2">    {</span><span class="si">% f</span><span class="s2">or i in range(5) %}
-</span><span class="s2">        echo &#34;{{ ds }}&#34;
-</span><span class="s2">        echo &#34;{{ macros.ds_add(ds, 7)}}&#34;
-</span><span class="s2">        echo &#34;{{ params.my_param }}&#34;
-</span><span class="s2">    {</span><span class="si">% e</span><span class="s2">ndfor %}
-</span><span class="s2">&#34;&#34;&#34;</span>
+<span class="n">templated_command</span> <span class="o">=</span> <span class="sa"></span><span class="s2">&#34;&#34;&#34;</span><span class="s2">
+</span><span class="s2"></span><span class="s2">    {</span><span class="si">% f</span><span class="s2">or i in range(5) </span><span class="s2">%</span><span class="s2">}</span><span class="s2">
+</span><span class="s2"></span><span class="s2">        echo </span><span class="s2">&#34;</span><span class="s2">{{ ds }}</span><span class="s2">&#34;</span><span class="s2">
+</span><span class="s2"></span><span class="s2">        echo </span><span class="s2">&#34;</span><span class="s2">{{ macros.ds_add(ds, 7)}}</span><span class="s2">&#34;</span><span class="s2">
+</span><span class="s2"></span><span class="s2">        echo </span><span class="s2">&#34;</span><span class="s2">{{ params.my_param }}</span><span class="s2">&#34;</span><span class="s2">
+</span><span class="s2"></span><span class="s2">    {</span><span class="si">% e</span><span class="s2">ndfor </span><span class="s2">%</span><span class="s2">}</span><span class="s2">
+</span><span class="s2"></span><span class="s2">&#34;&#34;&#34;</span>
 
 <span class="n">t3</span> <span class="o">=</span> <span class="n">BashOperator</span><span class="p">(</span>
-    <span class="n">task_id</span><span class="o">=</span><span class="s1">&#39;templated&#39;</span><span class="p">,</span>
+    <span class="n">task_id</span><span class="o">=</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1">templated</span><span class="s1">&#39;</span><span class="p">,</span>
     <span class="n">bash_command</span><span class="o">=</span><span class="n">templated_command</span><span class="p">,</span>
-    <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;my_param&#39;</span><span class="p">:</span> <span class="s1">&#39;Parameter I passed in&#39;</span><span class="p">},</span>
+    <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1">my_param</span><span class="s1">&#39;</span><span class="p">:</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1">Parameter I passed in</span><span class="s1">&#39;</span><span class="p">}</span><span class="p">,</span>
     <span class="n">dag</span><span class="o">=</span><span class="n">dag</span><span class="p">)</span>
 
 <span class="n">t2</span><span class="o">.</span><span class="n">set_upstream</span><span class="p">(</span><span class="n">t1</span><span class="p">)</span>
-<span class="n">t3</span><span class="o">.</span><span class="n">set_upstream</span><span class="p">(</span><span class="n">t1</span><span class="p">)</span></code></pre></div>
-<p>dags에 파일이 생성되고 잠시 후 DAG를 웹페이지에서 확인할 수 있다.</p>
-
-<p><a href="http://webserver_ip:8080">http://webserver_ip:8080</a> 으로 접속하면 아래와 같은 페이지를 볼수 있다.
-<img src="airflow-admin-1.png" alt="airflow_web_service" /></p>
-
+<span class="n">t3</span><span class="o">.</span><span class="n">set_upstream</span><span class="p">(</span><span class="n">t1</span><span class="p">)</span>
+</code></pre></div><p>dags에 파일이 생성되고 잠시 후 DAG를 웹페이지에서 확인할 수 있다.</p>
+<p>http://webserver_ip:8080 으로 접속하면 아래와 같은 페이지를 볼수 있다.
+<img src="airflow-admin-1.png" alt="airflow_web_service"></p>
 <p>위 이미지와 같이 DAG를 On 시킨뒤 실행 버튼을 누르면 정상적으로 성공하면 제대로 설정이 된것이다.</p>
 
 			</div>

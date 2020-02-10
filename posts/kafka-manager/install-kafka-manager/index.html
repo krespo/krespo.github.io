@@ -9,16 +9,13 @@
 	<meta name="msapplication-TileColor" content="#494f5c">
 <meta itemprop="name" content="[Kafka Manager] 1.Installation">
 <meta itemprop="description" content="yahoo에서 만든 kafka-manager를 이용하면 카프카 운영을 위한 다양한 일들을 Web UI기반으로 처리할 수 있다. 설치 ## https://github.com/yahoo/kafka-manager/releases 에서 원하는 버전을 확인하">
-
-
 <meta itemprop="datePublished" content="2019-12-10T14:31:31&#43;09:00" />
 <meta itemprop="dateModified" content="2019-12-10T14:31:31&#43;09:00" />
 <meta itemprop="wordCount" content="438">
 
 
 
-<meta itemprop="keywords" content="kafka,kafka-manager," />
-<meta property="og:title" content="[Kafka Manager] 1.Installation" />
+<meta itemprop="keywords" content="kafka,kafka-manager," /><meta property="og:title" content="[Kafka Manager] 1.Installation" />
 <meta property="og:description" content="yahoo에서 만든 kafka-manager를 이용하면 카프카 운영을 위한 다양한 일들을 Web UI기반으로 처리할 수 있다. 설치 ## https://github.com/yahoo/kafka-manager/releases 에서 원하는 버전을 확인하" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://krespo.github.io/posts/kafka-manager/install-kafka-manager/" />
@@ -77,22 +74,19 @@
 				<h1>[Kafka Manager] 1.Installation</h1>
 			</header>
 			<div class="content">
-				
-
-<p>yahoo에서 만든 <a href="https://github.com/yahoo/kafka-manager">kafka-manager</a>를 이용하면 카프카 운영을 위한 다양한 일들을 Web UI기반으로 처리할 수 있다.</p>
-
+				<p>yahoo에서 만든 <a href="https://github.com/yahoo/kafka-manager">kafka-manager</a>를 이용하면 카프카 운영을 위한 다양한 일들을 Web UI기반으로 처리할 수 있다.</p>
 <h2 id="설치">설치<a href="#설치" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1">## https://github.com/yahoo/kafka-manager/releases 에서 원하는 버전을 확인하고 -b 파라미터로 버전을 넘겨준다.</span>
 <span class="c1">## 실제 실행파일은 해당 소스를 빌드한 후 생성이 됨으로 아래의 git clone은 아무 위치에서 실행해도 상관없다.</span>
-$ git clone -b <span class="m">2</span>.0.0.2 https://github.com/yahoo/kafka-manager.git
+$ git clone -b 2.0.0.2 https://github.com/yahoo/kafka-manager.git
 $ <span class="nb">cd</span> kafka-manager
 <span class="c1">## 아래의 명령어로 빌드를 하면 target/universal 하위에 zip파일로 빌드파일이 생성된다.</span>
 $ ./sbt clean dist
 
 $ mv ./target/universal/kafka-manager-2.0.0.2.zip <span class="o">{</span>설치하고자 하는 디렉토리<span class="o">}</span>
 $ <span class="nb">cd</span> <span class="o">{</span>설치하고자 하는 디렉토리<span class="o">}</span>
-$ unzip kafka-manager-2.0.0.2.zip</code></pre></div>
-<h2 id="설정">설정<a href="#설정" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+$ unzip kafka-manager-2.0.0.2.zip
+</code></pre></div><h2 id="설정">설정<a href="#설정" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ vi conf/application.conf
 
 <span class="c1">### zookeeper 호스트를 지정해줌</span>
@@ -100,13 +94,14 @@ $ unzip kafka-manager-2.0.0.2.zip</code></pre></div>
 <span class="c1">### 이때 kafka-manager 노드는 자동생성이 된다.</span>
 <span class="c1">### 만약 zk_host:2181/kafka-manager-2.0.0.2와 같이 depth가 추가가 되면 kafka manager는 해당 노드를 생성해 주지 않기 때문에 kafka-manager-2.0.0.2 노드는 직접 수동으로 만들어 줘야 한다.</span>
 <span class="c1">### ex) zkCli.sh create /kafka-manager-2.0.0.2 &#39;&#39;</span>
-kafka-manager.zkhosts<span class="o">=</span>“zk_host:2181”</code></pre></div>
-<h2 id="실행">실행<a href="#실행" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+kafka-manager.zkhosts<span class="o">=</span>“zk_host:2181”
+</code></pre></div><h2 id="실행">실행<a href="#실행" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1">## foreground</span>
 bin/kafka-manager
 
 <span class="c1">## background</span>
-background nohup ./bin/kafka-manager &gt; /dev/null <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span> <span class="p">&amp;</span></code></pre></div>
+background nohup ./bin/kafka-manager &gt; /dev/null 2&gt;<span class="p">&amp;</span><span class="m">1</span> <span class="p">&amp;</span>
+</code></pre></div>
 			</div>
 
 			<hr class="post-end">

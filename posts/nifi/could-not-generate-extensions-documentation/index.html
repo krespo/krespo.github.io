@@ -9,16 +9,13 @@
 	<meta name="msapplication-TileColor" content="#494f5c">
 <meta itemprop="name" content="[Nifi]Could Not Generate Extensions Documentation 에러 해결 방법">
 <meta itemprop="description" content="커스텀 프로세서 생성 후 mvn clean package를 통해 .nar파일을 생성하는데, 아래와 같은 에러가 발생했다. [ERROR] Could not generate extensions&#39; documentation org.apache.maven.plugin.MojoExecutionException: Failed to create Extension Documentation at org.apache.nifi.NarMojo.generateDocumentation (NarMojo.java:596) at org.apache.nifi.NarMojo.execute (NarMojo.java:499) at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo (DefaultBuildPluginManager.java:137) at">
-
-
 <meta itemprop="datePublished" content="2020-01-02T11:01:41&#43;09:00" />
 <meta itemprop="dateModified" content="2020-01-02T11:01:41&#43;09:00" />
 <meta itemprop="wordCount" content="269">
 
 
 
-<meta itemprop="keywords" content="nifi," />
-<meta property="og:title" content="[Nifi]Could Not Generate Extensions Documentation 에러 해결 방법" />
+<meta itemprop="keywords" content="nifi," /><meta property="og:title" content="[Nifi]Could Not Generate Extensions Documentation 에러 해결 방법" />
 <meta property="og:description" content="커스텀 프로세서 생성 후 mvn clean package를 통해 .nar파일을 생성하는데, 아래와 같은 에러가 발생했다. [ERROR] Could not generate extensions&#39; documentation org.apache.maven.plugin.MojoExecutionException: Failed to create Extension Documentation at org.apache.nifi.NarMojo.generateDocumentation (NarMojo.java:596) at org.apache.nifi.NarMojo.execute (NarMojo.java:499) at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo (DefaultBuildPluginManager.java:137) at" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://krespo.github.io/posts/nifi/could-not-generate-extensions-documentation/" />
@@ -78,7 +75,6 @@
 			</header>
 			<div class="content">
 				<p>커스텀 프로세서 생성 후 <code>mvn clean package</code>를 통해 .nar파일을 생성하는데, 아래와 같은 에러가 발생했다.</p>
-
 <pre><code>[ERROR] Could not generate extensions' documentation
 org.apache.maven.plugin.MojoExecutionException: Failed to create Extension Documentation
     at org.apache.nifi.NarMojo.generateDocumentation (NarMojo.java:596)
@@ -133,15 +129,14 @@ Caused by: java.lang.NullPointerException
     at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:225)
     at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:406)
     at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:347)
-</code></pre>
-
-<p>위와 같은 문제 발생시 커스텀 프로세서 프로젝트 하위의 <code>xxx-processors</code> 프로젝트에 디펜던시 추가를 하여 해결 가능하다.</p>
-<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;dependency&gt;</span>
-    <span class="nt">&lt;groupId&gt;</span>org.apache.nifi<span class="nt">&lt;/groupId&gt;</span>
-    <span class="nt">&lt;artifactId&gt;</span>nifi-standard-services-api-nar<span class="nt">&lt;/artifactId&gt;</span>
-    <span class="nt">&lt;version&gt;</span>${nifi.version}<span class="nt">&lt;/version&gt;</span>
-    <span class="nt">&lt;type&gt;</span>nar<span class="nt">&lt;/type&gt;</span>
-<span class="nt">&lt;/dependency&gt;</span></code></pre></div>
+</code></pre><p>위와 같은 문제 발생시 커스텀 프로세서 프로젝트 하위의 <code>xxx-processors</code> 프로젝트에 디펜던시 추가를 하여 해결 가능하다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;dependency</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;groupId</span><span class="nt">&gt;</span>org.apache.nifi<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId</span><span class="nt">&gt;</span>nifi-standard-services-api-nar<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version</span><span class="nt">&gt;</span>${nifi.version}<span class="nt">&lt;/version&gt;</span>
+    <span class="nt">&lt;type</span><span class="nt">&gt;</span>nar<span class="nt">&lt;/type&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>
 			</div>
 
 <div class="related-posts thin">

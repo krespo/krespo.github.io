@@ -9,16 +9,13 @@
 	<meta name="msapplication-TileColor" content="#494f5c">
 <meta itemprop="name" content="[Kudu] 3. Source Build를 이용한 설치">
 <meta itemprop="description" content="kudu를 설치하는 방법은 cloudera repository를 이용하여 설치하는 방법이 있고, source build를 통해 설치하는 방법이 있는데, cloudera 버전은 라이센스 관련 이슈">
-
-
 <meta itemprop="datePublished" content="2019-12-04T16:52:07&#43;09:00" />
 <meta itemprop="dateModified" content="2019-12-04T16:52:07&#43;09:00" />
 <meta itemprop="wordCount" content="487">
 
 
 
-<meta itemprop="keywords" content="kudu," />
-<meta property="og:title" content="[Kudu] 3. Source Build를 이용한 설치" />
+<meta itemprop="keywords" content="kudu," /><meta property="og:title" content="[Kudu] 3. Source Build를 이용한 설치" />
 <meta property="og:description" content="kudu를 설치하는 방법은 cloudera repository를 이용하여 설치하는 방법이 있고, source build를 통해 설치하는 방법이 있는데, cloudera 버전은 라이센스 관련 이슈" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://krespo.github.io/posts/kudu/install_kudu/" />
@@ -77,33 +74,26 @@
 				<h1>[Kudu] 3. Source Build를 이용한 설치</h1>
 			</header>
 			<div class="content">
-				
-
-<p>kudu를 설치하는 방법은 cloudera repository를 이용하여 설치하는 방법이 있고, source build를 통해 설치하는 방법이 있는데, cloudera 버전은 라이센스 관련 이슈가 있어서, 사용에 문제가 없는 source build 버전을 통해 설치해보려고 한다.</p>
-
+				<p>kudu를 설치하는 방법은 cloudera repository를 이용하여 설치하는 방법이 있고, source build를 통해 설치하는 방법이 있는데, cloudera 버전은 라이센스 관련 이슈가 있어서, 사용에 문제가 없는 source build 버전을 통해 설치해보려고 한다.</p>
 <h2 id="설치환경">설치환경<a href="#설치환경" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
-
 <ul>
 <li>CentOS 7.6</li>
 </ul>
-
 <h3 id="1-필수-라이브러리-설치">1. 필수 라이브러리 설치<a href="#1-필수-라이브러리-설치" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ sudo yum install -y autoconf automake cyrus-sasl-devel cyrus-sasl-gssapi <span class="se">\
 </span><span class="se"></span>  cyrus-sasl-plain flex gcc gcc-c++ gdb git java-1.8.0-openjdk-devel <span class="se">\
 </span><span class="se"></span>  krb5-server krb5-workstation libtool make openssl-devel patch <span class="se">\
-</span><span class="se"></span>  pkgconfig redhat-lsb-core rsync unzip vim-common which</code></pre></div>
-<h3 id="2-optional-kudu-nvm-사용을-위한-라이브러리-설치">2. (Optional) Kudu NVM 사용을 위한 라이브러리 설치<a href="#2-optional-kudu-nvm-사용을-위한-라이브러리-설치" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
-
+</span><span class="se"></span>  pkgconfig redhat-lsb-core rsync unzip vim-common which
+</code></pre></div><h3 id="2-optional-kudu-nvm-사용을-위한-라이브러리-설치">2. (Optional) Kudu NVM 사용을 위한 라이브러리 설치<a href="#2-optional-kudu-nvm-사용을-위한-라이브러리-설치" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>Kudu의 <a href="https://ko.wikipedia.org/wiki/%EB%B9%84%ED%9C%98%EB%B0%9C%EC%84%B1_%EB%A9%94%EB%AA%A8%EB%A6%AC">NVM(비휘발성 메모리)</a> 블록 캐시를 지원하려면 memkind 라이브러리를 설치해야한다.</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ sudo yum install -y memkind</code></pre></div>
-<h3 id="3-kudu-source-clone">3. Kudu Source Clone<a href="#3-kudu-source-clone" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
-
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ sudo yum install -y memkind
+</code></pre></div><h3 id="3-kudu-source-clone">3. Kudu Source Clone<a href="#3-kudu-source-clone" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p><a href="https://github.com/apache/kudu/releases">Kudu Release</a>에서 버전을 확인한 후, git clone시 버전을 지정하여 clone 한다.</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ git clone -b <span class="m">1</span>.11.1 https://github.com/apache/kudu kudu-1.11.1
-$ <span class="nb">cd</span> kudu-1.11.1</code></pre></div>
-<h3 id="4-build-if-necessary-sh를-이용한-third-party-requirements-빌드">4. build-if-necessary.sh를 이용한 third-party requirements 빌드<a href="#4-build-if-necessary-sh를-이용한-third-party-requirements-빌드" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ build-support/enable_devtoolset.sh thirdparty/build-if-necessary.sh</code></pre></div>
-<h3 id="5-kudu-build-and-install">5. Kudu Build And Install<a href="#5-kudu-build-and-install" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ git clone -b 1.11.1 https://github.com/apache/kudu kudu-1.11.1
+$ <span class="nb">cd</span> kudu-1.11.1
+</code></pre></div><h3 id="4-build-if-necessarysh를-이용한-third-party-requirements-빌드">4. build-if-necessary.sh를 이용한 third-party requirements 빌드<a href="#4-build-if-necessarysh를-이용한-third-party-requirements-빌드" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ build-support/enable_devtoolset.sh thirdparty/build-if-necessary.sh
+</code></pre></div><h3 id="5-kudu-build-and-install">5. Kudu Build And Install<a href="#5-kudu-build-and-install" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ mkdir -p build/release
 
 $ <span class="nb">cd</span> build/release
@@ -113,30 +103,30 @@ $ ../../thirdparty/installed/common/bin/cmake <span class="se">\
 </span><span class="se"></span>  -DCMAKE_BUILD_TYPE<span class="o">=</span>release ../..
 
 $ make -j4
-$ sudo make install</code></pre></div>
-<h3 id="6-1-kudu-master-실행">6-1. Kudu Master 실행<a href="#6-1-kudu-master-실행" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+$ sudo make install
+</code></pre></div><h3 id="6-1-kudu-master-실행">6-1. Kudu Master 실행<a href="#6-1-kudu-master-실행" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1">## 공통</span>
 $ sudo mkdir /etc/kudu
 $ sudo vi /etc/kudu/master.gflagfile
 
 <span class="c1">## 추가 설정은 https://kudu.apache.org/docs/configuration_reference.html#kudu-master_supported 에서 확인</span>
---rpc_bind_addresses<span class="o">=</span><span class="m">0</span>.0.0.0:7051
+--rpc_bind_addresses<span class="o">=</span>0.0.0.0:7051
 --fs_wal_dir<span class="o">=</span>/var/lib/kudu/master
 --fs_data_dirs<span class="o">=</span>/var/lib/kudu/master
 --log_dir<span class="o">=</span>/var/log/kudu
---webserver_doc_root<span class="o">={</span>KUDU git clone path<span class="o">}</span>/www
+--webserver_doc_root<span class="o">=</span><span class="o">{</span>KUDU git clone path<span class="o">}</span>/www
 
 <span class="c1">##wal dir, data dir, log dir에 권한이 필요하면 chown으로 권한 변경</span>
 
 <span class="c1">## kudu master 실행후 http://master-host:8051로 접속</span>
-$ nohup kudu-master --flagfile<span class="o">=</span>/etc/kudu/master.gflagfile &gt; /dev/null <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span> <span class="p">&amp;</span></code></pre></div>
-<h3 id="6-2-kudu-tablet-server-실행">6-2. Kudu Tablet Server 실행<a href="#6-2-kudu-tablet-server-실행" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+$ nohup kudu-master --flagfile<span class="o">=</span>/etc/kudu/master.gflagfile &gt; /dev/null 2&gt;<span class="p">&amp;</span><span class="m">1</span> <span class="p">&amp;</span>
+</code></pre></div><h3 id="6-2-kudu-tablet-server-실행">6-2. Kudu Tablet Server 실행<a href="#6-2-kudu-tablet-server-실행" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1">## 공통</span>
 $ sudo mkdir /etc/kudu
 $ sudo vi /etc/kudu/tserver.gflagfile
 
 <span class="c1">## 추가 설정은 https://kudu.apache.org/docs/configuration_reference.html#kudu-tserver_supported 에서 확인</span>
---rpc_bind_addresses<span class="o">=</span><span class="m">0</span>.0.0.0:7051
+--rpc_bind_addresses<span class="o">=</span>0.0.0.0:7051
 --fs_wal_dir<span class="o">=</span>/var/lib/kudu/tserver
 --fs_data_dirs<span class="o">=</span>/var/lib/kudu/tserver
 --log_dir<span class="o">=</span>/var/log/kudu
@@ -144,7 +134,8 @@ $ sudo vi /etc/kudu/tserver.gflagfile
 
 <span class="c1">##wal dir, data dir, log dir에 권한이 필요하면 chown으로 권한 변경</span>
 
-$ nohup kudu-tserver --flagfile<span class="o">=</span>/etc/kudu/tserver.gflagfile&gt; /dev/null <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span> <span class="p">&amp;</span></code></pre></div>
+$ nohup kudu-tserver --flagfile<span class="o">=</span>/etc/kudu/tserver.gflagfile&gt; /dev/null 2&gt;<span class="p">&amp;</span><span class="m">1</span> <span class="p">&amp;</span>
+</code></pre></div>
 			</div>
 
 <div class="related-posts thin">
