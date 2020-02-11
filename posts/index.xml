@@ -6,8 +6,112 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>ko-KR</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Mon, 10 Feb 2020 17:33:42 +0900</lastBuildDate>
+		<lastBuildDate>Tue, 11 Feb 2020 13:29:34 +0900</lastBuildDate>
 		<atom:link href="https://krespo.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>[Airflow] Local 개발환경 설정(2)_Dag 개발</title>
+			<link>https://krespo.github.io/posts/airflow/develop-environment-with-dags/</link>
+			<pubDate>Tue, 11 Feb 2020 13:29:34 +0900</pubDate>
+			
+			<guid>https://krespo.github.io/posts/airflow/develop-environment-with-dags/</guid>
+			<description>앞서 Local 개발환경 설정(1)_설치를 통해 로컬에 Airflow를 설치를 해보았다. 이번에는 로컬에 설치된 Airflow를 이용하여 dag를 개발할 수 있는 환</description>
+			<content type="html"><![CDATA[<p>앞서 <a href="/posts/airflow/develop-environment/">Local 개발환경 설정(1)_설치</a>를 통해 로컬에 Airflow를 설치를 해보았다.</p>
+<p>이번에는 로컬에 설치된 Airflow를 이용하여 dag를 개발할 수 있는 환경을 만들어 보고자 한다.</p>
+<h1 id="개발-환경">개발 환경</h1>
+<ul>
+<li>Mac OS(Catalina)</li>
+<li>Intellij</li>
+</ul>
+<p>이전 포스팅에서도 이야기했듯, 2가지 git repository를 사용하는데</p>
+<ul>
+<li>airflow-devel repository : 로컬에 airflow 모듈을 설정</li>
+<li>airflow-dags repository : dag를 생성하고, 이를 통해 Production Level의 서버에 배포</li>
+</ul>
+<p>하는 역할을 한다.</p>
+<p>이 airflow-dags repository는 git submodule을 이용하여 로컬에 설치한 airflow-devel/dags로 추가한다.</p>
+<h1 id="1-git-submodule을-이용하여-airflow_homedags에-추가한다">1. git submodule을 이용하여 AIRFLOW_HOME/dags에 추가한다.</h1>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ <span class="nb">cd</span> <span class="si">${</span><span class="nv">AIRFLOW_HOME</span><span class="si">}</span>
+
+<span class="c1">## master브랜치를 dags라는 디렉토리로 submodule을 만든다.</span>
+<span class="c1">## 각 환경에 맞는 dags Repository를 추가하자.</span>
+$ git submodule -b master add https://github.com/krespo/airflow-dags.git dags
+</code></pre></div><h1 id="2-intellij에서-airflow-devel-프로젝트-설정">2. Intellij에서 airflow-devel 프로젝트 설정</h1>
+<ol>
+<li><code>Intellij Menu -&gt; File -&gt; Open</code> 을 선택하여, airflow-devel 프로젝트를 선택한다. <strong>(airflow-devel/dags를 선택하는 것이 아니다)</strong></li>
+<li><code>Command + ; 혹은 Project structure</code> 를 선택한다.
+<ol>
+<li>Python SDK 설정
+<ol>
+<li>좌측 Project -&gt; Project SDK 에서 new(Python SDK) 선택</li>
+<li>Virtualenv Environment 선택</li>
+<li>Existing environment를 선택하고 Interpreter 부분에 airflow-devel/.direnv/python-3.7.6/bin/python 선택 후 저장</li>
+</ol>
+</li>
+<li>좌측 Modules를 눌러 dags 디렉토리를 Sources로 지정 <img src="airflow-modules.png" alt="airflow-modules"></li>
+</ol>
+</li>
+</ol>
+<h1 id="3-dag-생성">3. Dag 생성</h1>
+<p>dags 디렉토리에 테스트용 dag를 생성한다. 2번의 작업이 정상적으로 되었다면 아래의 소스코드에서 소스에러는 보이지 않을것이다. 만약 airflow 모듈을 찾지 못한다고 빨간줄이 생기면서 에러가 발생한다면 2번의 설정이 정상적인지 다시한번 확인한다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">airflow</span> <span class="kn">import</span> <span class="n">DAG</span>
+<span class="kn">from</span> <span class="nn">airflow.operators.bash_operator</span> <span class="kn">import</span> <span class="n">BashOperator</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+
+<span class="n">default_args</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="sa"></span><span class="s1">&#39;</span><span class="s1">owner</span><span class="s1">&#39;</span><span class="p">:</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1">Airflow</span><span class="s1">&#39;</span><span class="p">,</span>
+    <span class="sa"></span><span class="s1">&#39;</span><span class="s1">depends_on_past</span><span class="s1">&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+    <span class="sa"></span><span class="s1">&#39;</span><span class="s1">start_date</span><span class="s1">&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="p">,</span>
+    <span class="sa"></span><span class="s1">&#39;</span><span class="s1">email</span><span class="s1">&#39;</span><span class="p">:</span> <span class="p">[</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1">airflow@example.com</span><span class="s1">&#39;</span><span class="p">]</span><span class="p">,</span>
+    <span class="sa"></span><span class="s1">&#39;</span><span class="s1">email_on_failure</span><span class="s1">&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+    <span class="sa"></span><span class="s1">&#39;</span><span class="s1">email_on_retry</span><span class="s1">&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+    <span class="sa"></span><span class="s1">&#39;</span><span class="s1">retries</span><span class="s1">&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="sa"></span><span class="s1">&#39;</span><span class="s1">catchup</span><span class="s1">&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+    <span class="sa"></span><span class="s1">&#39;</span><span class="s1">retry_delay</span><span class="s1">&#39;</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1">tutorial</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">default_args</span><span class="o">=</span><span class="n">default_args</span><span class="p">,</span> <span class="n">schedule_interval</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="p">)</span>
+
+<span class="c1"># t1, t2 and t3 are examples of tasks created by instantiating operators</span>
+<span class="n">t1</span> <span class="o">=</span> <span class="n">BashOperator</span><span class="p">(</span>
+    <span class="n">task_id</span><span class="o">=</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1">print_date</span><span class="s1">&#39;</span><span class="p">,</span>
+    <span class="n">bash_command</span><span class="o">=</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1">date</span><span class="s1">&#39;</span><span class="p">,</span>
+    <span class="n">dag</span><span class="o">=</span><span class="n">dag</span><span class="p">)</span>
+
+<span class="n">t2</span> <span class="o">=</span> <span class="n">BashOperator</span><span class="p">(</span>
+    <span class="n">task_id</span><span class="o">=</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1">sleep</span><span class="s1">&#39;</span><span class="p">,</span>
+    <span class="n">bash_command</span><span class="o">=</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1">sleep 5</span><span class="s1">&#39;</span><span class="p">,</span>
+    <span class="n">retries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">dag</span><span class="o">=</span><span class="n">dag</span><span class="p">)</span>
+
+<span class="n">templated_command</span> <span class="o">=</span> <span class="sa"></span><span class="s2">&#34;&#34;&#34;</span><span class="s2">
+</span><span class="s2"></span><span class="s2">    {</span><span class="si">% f</span><span class="s2">or i in range(5) </span><span class="s2">%</span><span class="s2">}</span><span class="s2">
+</span><span class="s2"></span><span class="s2">        echo </span><span class="s2">&#34;</span><span class="s2">{{ ds }}</span><span class="s2">&#34;</span><span class="s2">
+</span><span class="s2"></span><span class="s2">        echo </span><span class="s2">&#34;</span><span class="s2">{{ macros.ds_add(ds, 7)}}</span><span class="s2">&#34;</span><span class="s2">
+</span><span class="s2"></span><span class="s2">        echo </span><span class="s2">&#34;</span><span class="s2">{{ params.my_param }}</span><span class="s2">&#34;</span><span class="s2">
+</span><span class="s2"></span><span class="s2">    {</span><span class="si">% e</span><span class="s2">ndfor </span><span class="s2">%</span><span class="s2">}</span><span class="s2">
+</span><span class="s2"></span><span class="s2">&#34;&#34;&#34;</span>
+
+<span class="n">t3</span> <span class="o">=</span> <span class="n">BashOperator</span><span class="p">(</span>
+    <span class="n">task_id</span><span class="o">=</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1">templated</span><span class="s1">&#39;</span><span class="p">,</span>
+    <span class="n">bash_command</span><span class="o">=</span><span class="n">templated_command</span><span class="p">,</span>
+    <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1">my_param</span><span class="s1">&#39;</span><span class="p">:</span> <span class="sa"></span><span class="s1">&#39;</span><span class="s1">Parameter I passed in</span><span class="s1">&#39;</span><span class="p">}</span><span class="p">,</span>
+    <span class="n">dag</span><span class="o">=</span><span class="n">dag</span><span class="p">)</span>
+
+<span class="n">t1</span> <span class="o">&gt;&gt;</span> <span class="n">t2</span> <span class="o">&gt;&gt;</span> <span class="n">t3</span>
+</code></pre></div><h1 id="4-local에서-생성된-dag-실행">4. Local에서 생성된 dag 실행</h1>
+<p>아래와 같은 명령어로 airflow를 로컬에서 실행시키자.</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">nohup airflow scheduler &gt; /dev/null 2&gt;<span class="p">&amp;</span><span class="m">1</span> <span class="p">&amp;</span>
+nohup airflow webserver &gt; /dev/null 2&gt;<span class="p">&amp;</span><span class="m">1</span> <span class="p">&amp;</span>
+</code></pre></div><p>http://localhost:8080 로 접속하여 방금 생성한 dag가 제대로 로드되고 실행되는지 체크한다.</p>
+<p>아래 그림처럼 방금 생성한 tutorial dag가 화면에 보이면 정상이다.
+<img src="airflow-local-exe.png" alt="airflow-local"></p>
+<h1 id="5-production-환경의-airflow에-dag배포">5. Production 환경의 airflow에 dag배포</h1>
+<p>필요한 dag를 모두 생성 완료했다면, submodule인 dags를 commit &amp; push 한다.</p>
+<p>그 후 Production Level의 airflow서버에 접속하여 airflow-dags repository를 <a href="/posts/airflow/develop-environment-with-dags/#1-git-submodule%EC%9D%84-%EC%9D%B4%EC%9A%A9%ED%95%98%EC%97%AC-airflow_homedags%EC%97%90-%EC%B6%94%EA%B0%80%ED%95%9C%EB%8B%A4">1번 설정</a> 설정과 동일하게 $AIRFLOW_HOME에 submodule로 생성하여 사용한다.</p>
+<p>필자는 jenkins &amp; github webhook을 통해 airflow-dags에 push가 발생하면 jenkins가 각 airflow 서버에 배포하도록 설정하였다.</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>[Sqoop] Parameter &#39;directory&#39; is not a directory 에러 해결하기</title>
