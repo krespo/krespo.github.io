@@ -24,7 +24,7 @@
 <p>답변으로 간단하게 <code>불가</code>함을 적었었는데, 오늘은 조금더 상세히 남겨보려고한다.</p>
 <p>일단 좀더 상세한 로그를 확인하려면 <code>airflow.cfg</code>의 로그레벨 설정항목인 <code>logging_level = INFO</code> 로 설정을 한뒤, scheduler.log 파일을 훑어보면 아래와 같은 로그가 남겨진다.</p>
 <pre><code>[2020-02-12 15:12:17,513] {base_executor.py:59} INFO - Adding to queue: ['airflow', 'run', 'test_task', 'custom_opeartor', '2019-12-31T15:00:00+00:00', '--local', '--pool', 'default_pool', '-sd', '/.../TestSqoopOperator.py']
-[2020-02-12 15:12:17,514] {sequential_executor.py:45} INFO - Executing command in Celery: ['airflow', 'run', 'test_task', 'custom_opeartor', '2019-12-31T15:00:00+00:00', '--local', '--pool', 'default_pool', '-sd', '/.../TestSqoopOperator.py']
+[2020-02-12 15:12:17,514] {celery_executor.py:45} INFO - Executing command in Celery: ['airflow', 'run', 'test_task', 'custom_opeartor', '2019-12-31T15:00:00+00:00', '--local', '--pool', 'default_pool', '-sd', '/.../TestSqoopOperator.py']
 </code></pre><p>Adding to queue 로그는 레빗엠큐나 레디스 큐에 넣어주는 정보이고, Executing command 는 실제 worker가 잡을 할당받아 수행하게 되는 정보를 나타낸다.</p>
 <p>한눈에 보면 알겠지만 -sd라는 파라미터로 실제 수행하고자 하는 dag파일의 위치가 문자형으로 넘어가게 된다.</p>
 <p>이를 통해 수행되는 코드는 아래와 같다.</p>
