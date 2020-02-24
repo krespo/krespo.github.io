@@ -6,8 +6,47 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>ko-KR</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Tue, 11 Feb 2020 13:29:34 +0900</lastBuildDate>
+		<lastBuildDate>Mon, 24 Feb 2020 16:47:18 +0900</lastBuildDate>
 		<atom:link href="https://krespo.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>[Airflow] Multi Server Cluster 환경에서 dag 파일은 모든 서버에 배포해야할까?</title>
+			<link>https://krespo.github.io/posts/airflow/dag_deployment/</link>
+			<pubDate>Mon, 24 Feb 2020 16:47:18 +0900</pubDate>
+			
+			<guid>https://krespo.github.io/posts/airflow/dag_deployment/</guid>
+			<description>오늘은 Multi Server Cluster 환경에서 dag를 배포하는것에 대해 이야기를 해보려고한다. 얼마전에 블로그 댓글을 통해 이런 문의가 왔었다. Master 역할을 하는 서버에만 dag를 배포</description>
+			<content type="html"><![CDATA[<p>오늘은 Multi Server Cluster 환경에서 dag를 배포하는것에 대해 이야기를 해보려고한다.</p>
+<p>얼마전에 블로그 댓글을 통해 이런 문의가 왔었다.</p>
+<blockquote>
+<p>Master 역할을 하는 서버에만 dag를 배포하고, 이를 통해 Worker에 dag 파일을 전달하는 방식으로 dag를 수행할수 있습니까?</p>
+</blockquote>
+<p>답변으로 간단하게 <code>불가</code>함을 적었었는데, 오늘은 조금더 상세히 남겨보려고한다.</p>
+<p>일단 좀더 상세한 로그를 확인하려면 <code>airflow.cfg</code>의 로그레벨 설정항목인 <code>logging_level = INFO</code> 로 설정을 한뒤, scheduler.log 파일을 훑어보면 아래와 같은 로그가 남겨진다.</p>
+<pre><code>[2020-02-12 15:12:17,513] {base_executor.py:59} INFO - Adding to queue: ['airflow', 'run', 'test_task', 'custom_opeartor', '2019-12-31T15:00:00+00:00', '--local', '--pool', 'default_pool', '-sd', '/.../TestSqoopOperator.py']
+[2020-02-12 15:12:17,514] {sequential_executor.py:45} INFO - Executing command in Celery: ['airflow', 'run', 'test_task', 'custom_opeartor', '2019-12-31T15:00:00+00:00', '--local', '--pool', 'default_pool', '-sd', '/.../TestSqoopOperator.py']
+</code></pre><p>Adding to queue 로그는 레빗엠큐나 레디스 큐에 넣어주는 정보이고, Executing command 는 실제 worker가 잡을 할당받아 수행하게 되는 정보를 나타낸다.</p>
+<p>한눈에 보면 알겠지만 -sd라는 파라미터로 실제 수행하고자 하는 dag파일의 위치가 문자형으로 넘어가게 된다.</p>
+<p>이를 통해 수행되는 코드는 아래와 같다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1">## celery_executor.py</span>
+
+<span class="nd">@app.task</span>
+<span class="k">def</span> <span class="nf">execute_command</span><span class="p">(</span><span class="n">command_to_exec</span><span class="p">)</span><span class="p">:</span>
+    <span class="n">log</span> <span class="o">=</span> <span class="n">LoggingMixin</span><span class="p">(</span><span class="p">)</span><span class="o">.</span><span class="n">log</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa"></span><span class="s2">&#34;</span><span class="s2">Executing command in Celery: </span><span class="si">%s</span><span class="s2">&#34;</span><span class="p">,</span> <span class="n">command_to_exec</span><span class="p">)</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">(</span><span class="n">command_to_exec</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span>
+                              <span class="n">close_fds</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="n">env</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1">execute_command encountered a CalledProcessError</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+
+        <span class="k">raise</span> <span class="n">AirflowException</span><span class="p">(</span><span class="sa"></span><span class="s1">&#39;</span><span class="s1">Celery command failed</span><span class="s1">&#39;</span><span class="p">)</span>
+</code></pre></div><p>코드를 확인해보면 큐에서 전달받은 데이터를 통해 subprocess 모듈을 이용하여 파이썬 파일을 실행하는것을 볼수 있다.</p>
+<p>즉 dag를 실행하려면 master에만 dag를 배포하면 안되고, airflow를 구성하고 있는 모든서버의 <code>동일한 위치, 동일한 이름</code>으로 dag 파일이 존재하여야 실행된다는것을 알수 있다.</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>[Airflow] Local 개발환경 설정(2)_Dag 개발</title>

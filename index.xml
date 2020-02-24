@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ko-KR</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Tue, 11 Feb 2020 13:29:34 +0900</lastBuildDate>
+    <lastBuildDate>Mon, 24 Feb 2020 16:47:18 +0900</lastBuildDate>
     
 	<atom:link href="https://krespo.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>[Airflow] Multi Server Cluster 환경에서 dag 파일은 모든 서버에 배포해야할까?</title>
+      <link>https://krespo.github.io/posts/airflow/dag_deployment/</link>
+      <pubDate>Mon, 24 Feb 2020 16:47:18 +0900</pubDate>
+      
+      <guid>https://krespo.github.io/posts/airflow/dag_deployment/</guid>
+      <description>오늘은 Multi Server Cluster 환경에서 dag를 배포하는것에 대해 이야기를 해보려고한다. 얼마전에 블로그 댓글을 통해 이런 문의가 왔었다. Master 역할을 하는 서버에만 dag를 배포</description>
+    </item>
     
     <item>
       <title>[Airflow] Local 개발환경 설정(2)_Dag 개발</title>
@@ -181,15 +190,6 @@
       
       <guid>https://krespo.github.io/posts/airflow/airflow-scheduler-failover/</guid>
       <description>위의 그림은 celery executor를 이용한 여러대의 워커로 구성한 아키텍쳐이다. 이중 scheduler는 DB에서 스케줄 정보를 가져와 redis의 pub/</description>
-    </item>
-    
-    <item>
-      <title>[Airflow] 커버로스 설정 및 hive 연결</title>
-      <link>https://krespo.github.io/posts/airflow/kerberos-configuration/</link>
-      <pubDate>Mon, 04 Nov 2019 16:05:44 +0900</pubDate>
-      
-      <guid>https://krespo.github.io/posts/airflow/kerberos-configuration/</guid>
-      <description>airflow를 이용하여 kerberos 인증이 적용된 데이터소스(ex - hadoop)에 접근하려면 커버로스 설정을 airflow에 적용해야 한다. 아래의 예제는 kerberos</description>
     </item>
     
   </channel>

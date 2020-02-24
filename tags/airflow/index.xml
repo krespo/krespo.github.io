@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ko-KR</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Tue, 11 Feb 2020 13:29:34 +0900</lastBuildDate>
+    <lastBuildDate>Mon, 24 Feb 2020 16:47:18 +0900</lastBuildDate>
     
 	<atom:link href="https://krespo.github.io/tags/airflow/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>[Airflow] Multi Server Cluster 환경에서 dag 파일은 모든 서버에 배포해야할까?</title>
+      <link>https://krespo.github.io/posts/airflow/dag_deployment/</link>
+      <pubDate>Mon, 24 Feb 2020 16:47:18 +0900</pubDate>
+      
+      <guid>https://krespo.github.io/posts/airflow/dag_deployment/</guid>
+      <description>오늘은 Multi Server Cluster 환경에서 dag를 배포하는것에 대해 이야기를 해보려고한다. 얼마전에 블로그 댓글을 통해 이런 문의가 왔었다. Master 역할을 하는 서버에만 dag를 배포</description>
+    </item>
     
     <item>
       <title>[Airflow] Local 개발환경 설정(2)_Dag 개발</title>

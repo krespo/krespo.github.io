@@ -7,7 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ko-KR</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Tue, 11 Feb 2020 13:29:34 +0900</lastBuildDate>
+    <lastBuildDate>Mon, 24 Feb 2020 16:47:18 +0900</lastBuildDate>
     
 	<atom:link href="https://krespo.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -15,7 +15,7 @@
     <item>
       <title>airflow</title>
       <link>https://krespo.github.io/tags/airflow/</link>
-      <pubDate>Tue, 11 Feb 2020 13:29:34 +0900</pubDate>
+      <pubDate>Mon, 24 Feb 2020 16:47:18 +0900</pubDate>
       
       <guid>https://krespo.github.io/tags/airflow/</guid>
       <description></description>
