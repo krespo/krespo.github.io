@@ -7,10 +7,28 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ko-KR</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Mon, 24 Feb 2020 16:47:18 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 03 Mar 2020 16:19:21 +0900</lastBuildDate>
     
 	<atom:link href="https://krespo.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>kudu</title>
+      <link>https://krespo.github.io/tags/kudu/</link>
+      <pubDate>Tue, 03 Mar 2020 16:19:21 +0900</pubDate>
+      
+      <guid>https://krespo.github.io/tags/kudu/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>presto</title>
+      <link>https://krespo.github.io/tags/presto/</link>
+      <pubDate>Tue, 03 Mar 2020 16:19:21 +0900</pubDate>
+      
+      <guid>https://krespo.github.io/tags/presto/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>airflow</title>
@@ -54,15 +72,6 @@
       <pubDate>Fri, 31 Jan 2020 16:56:58 +0900</pubDate>
       
       <guid>https://krespo.github.io/tags/ssl/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>kudu</title>
-      <link>https://krespo.github.io/tags/kudu/</link>
-      <pubDate>Tue, 14 Jan 2020 13:13:56 +0900</pubDate>
-      
-      <guid>https://krespo.github.io/tags/kudu/</guid>
       <description></description>
     </item>
     
@@ -180,15 +189,6 @@
       <pubDate>Mon, 04 Nov 2019 16:05:44 +0900</pubDate>
       
       <guid>https://krespo.github.io/tags/kerberos/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>azkaban</title>
-      <link>https://krespo.github.io/tags/azkaban/</link>
-      <pubDate>Thu, 31 Oct 2019 18:11:20 +0900</pubDate>
-      
-      <guid>https://krespo.github.io/tags/azkaban/</guid>
       <description></description>
     </item>
     

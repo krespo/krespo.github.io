@@ -6,8 +6,73 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>ko-KR</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Mon, 24 Feb 2020 16:47:18 +0900</lastBuildDate>
+		<lastBuildDate>Tue, 03 Mar 2020 16:19:21 +0900</lastBuildDate>
 		<atom:link href="https://krespo.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>[Kudu]Kudu와 Presto 그리고 unix_timestamp에 대해 이해하기</title>
+			<link>https://krespo.github.io/posts/kudu/presto-kudu-datetime/</link>
+			<pubDate>Tue, 03 Mar 2020 16:19:21 +0900</pubDate>
+			
+			<guid>https://krespo.github.io/posts/kudu/presto-kudu-datetime/</guid>
+			<description>Kudu 공식 문서에도 나와있지만 Kudu에서 주로 사용하는 쿼리엔진은 Impala나 Hive다. 하지만 필자는 이미 사용하고 있는 Presto 클러스터가 있어 Presto-Kudu Connector 를 이용하</description>
+			<content type="html"><![CDATA[<p>Kudu 공식 문서에도 나와있지만 Kudu에서 주로 사용하는 쿼리엔진은 Impala나 Hive다.
+하지만 필자는 이미 사용하고 있는 Presto 클러스터가 있어 <a href="https://prestodb.io/docs/current/connector/kudu.html">Presto-Kudu Connector</a> 를 이용하여 Kudu에 쿼리를 수행하고 있었는데, Kudu의 <code>unixtime_micros</code> 타입의 컬럼이 계속 헷갈려 여러가지 테스트를 수행해 보았다.
+이 포스팅은 그 테스트 과정 및 결과에 대한 이야기이다.</p>
+<h2 id="kudu에-데이터를-넣을때-kstutc9-시간을-utc로-변경해서-넣어야-할까">Kudu에 데이터를 넣을때 KST(UTC+9) 시간을 UTC로 변경해서 넣어야 할까?</h2>
+<p>사실 많은 개발자들이 알고있듯, <a href="https://ko.wikipedia.org/wiki/%EC%9C%A0%EB%8B%89%EC%8A%A4_%EC%8B%9C%EA%B0%84">유닉스_시간</a>은 1970년 1월1일 부터 현재까지의 시간을 정수형으로 나타낸 값이다. Kudu에도 시간을 나타내는 컬럼인 <code>unixtime_micros</code> 타입의 컬럼로 이 유닉스 타임을 저장하기 위한 컬럼이다.</p>
+<p>유닉스 시간에 대한 별다른 이해 없이, KST 시간을 kudu의 unixtime_micros에 저장하려면 KST-&gt;UTC-&gt;epoch시간 으로 변경해야 한다고 생각했다.</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="n">LocalDateTime</span> <span class="n">currentTime</span> <span class="o">=</span> <span class="n">LocalDateTime</span><span class="o">.</span><span class="na">now</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+<span class="n">ZonedDateTime</span> <span class="n">utcTime</span> <span class="o">=</span> <span class="n">currentTime</span><span class="o">.</span><span class="na">atZone</span><span class="o">(</span><span class="n">ZoneId</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">&#34;Asia/Seoul&#34;</span><span class="o">)</span><span class="o">)</span><span class="o">.</span><span class="na">withZoneSameInstant</span><span class="o">(</span><span class="n">ZoneId</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">&#34;UTC&#34;</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;KST Time : &#34;</span> <span class="o">+</span> <span class="n">currentTime</span><span class="o">)</span><span class="o">;</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;UTC Time : &#34;</span> <span class="o">+</span> <span class="n">utcTime</span><span class="o">)</span><span class="o">;</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;KST epoch Time : &#34;</span> <span class="o">+</span> <span class="n">currentTime</span><span class="o">.</span><span class="na">toEpochSecond</span><span class="o">(</span><span class="n">ZoneOffset</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">&#34;+09:00&#34;</span><span class="o">)</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;UTC epoch Time : &#34;</span> <span class="o">+</span> <span class="n">utcTime</span><span class="o">.</span><span class="na">toEpochSecond</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+
+<span class="c1">//출력 결과
+</span><span class="c1"></span><span class="c1">//KST Time : 2020-03-09T14:11:33.564
+</span><span class="c1"></span><span class="c1">//UTC Time : 2020-03-09T05:11:33.564Z[UTC]
+</span><span class="c1"></span><span class="c1">//KST epoch Time : 1583730693
+</span><span class="c1"></span><span class="c1">//UTC epoch Time : 1583730693
+</span></code></pre></div><p>그런데 위의 샘플 코드에서 보면 알겠지만, KST 시간을 UTC로 변경해도 epoch time은 값이 변하지 않았다.</p>
+<p>왜냐하면 유닉스 시간(epoch time)은 UTC 시간 기준이기 때문에 변경하고자 하는 시간의 timezone이 어찌되었던 항상 UTC 기준의 값을 돌려줌으로, <em>KST 시간을 kudu에 저장할때 굳이 UTC로 timezone을 변경할 필요가 없다.</em></p>
+<h2 id="presto에서는-왜-저장한-시간의-9시간이-추가되어-검색될까">Presto에서는 왜 저장한 시간의 +9시간이 추가되어 검색될까?</h2>
+<p>Presto를 이용하기 위한 방법으로는 presto-cli를 이용하는 방법과 Presto JDBC를 이용하여 쿼리를 수행하는 방법 두가지가 있다.
+그런데 위 두가지의 경우 모두 <code>unixtime_micros</code> 컬럼을 UTC에서 KST로 자동으로 변경된 값으로 변경이 된다.</p>
+<p>이는 presto-cli, jdbc 모두 로컬 환경의 기본 timezone을 따라가기 때문이다.</p>
+<h4 id="presto-cli">presto-cli</h4>
+<pre><code>presto&gt; select current_time();
+   _col0
+--------------
+  Asia/Seoul
+(1 row)
+</code></pre><h4 id="presto-jdbc">presto-jdbc</h4>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="c1">//https://github.com/prestosql/presto/blob/master/presto-jdbc/src/main/java/io/prestosql/jdbc/PrestoConnection.java
+</span><span class="c1"></span><span class="n">PrestoConnection</span><span class="o">(</span><span class="n">PrestoDriverUri</span> <span class="n">uri</span><span class="o">,</span> <span class="n">QueryExecutor</span> <span class="n">queryExecutor</span><span class="o">)</span>
+            <span class="kd">throws</span> <span class="n">SQLException</span>
+    <span class="o">{</span>
+        <span class="n">requireNonNull</span><span class="o">(</span><span class="n">uri</span><span class="o">,</span> <span class="s">&#34;uri is null&#34;</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">jdbcUri</span> <span class="o">=</span> <span class="n">uri</span><span class="o">.</span><span class="na">getJdbcUri</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">httpUri</span> <span class="o">=</span> <span class="n">uri</span><span class="o">.</span><span class="na">getHttpUri</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">schema</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">uri</span><span class="o">.</span><span class="na">getSchema</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">catalog</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">uri</span><span class="o">.</span><span class="na">getCatalog</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">user</span> <span class="o">=</span> <span class="n">uri</span><span class="o">.</span><span class="na">getUser</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">applicationNamePrefix</span> <span class="o">=</span> <span class="n">uri</span><span class="o">.</span><span class="na">getApplicationNamePrefix</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">extraCredentials</span> <span class="o">=</span> <span class="n">uri</span><span class="o">.</span><span class="na">getExtraCredentials</span><span class="o">(</span><span class="o">)</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">queryExecutor</span> <span class="o">=</span> <span class="n">requireNonNull</span><span class="o">(</span><span class="n">queryExecutor</span><span class="o">,</span> <span class="s">&#34;queryExecutor is null&#34;</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">uri</span><span class="o">.</span><span class="na">getClientTags</span><span class="o">(</span><span class="o">)</span><span class="o">.</span><span class="na">ifPresent</span><span class="o">(</span><span class="n">tags</span> <span class="o">-</span><span class="o">&gt;</span> <span class="n">clientInfo</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">&#34;ClientTags&#34;</span><span class="o">,</span> <span class="n">tags</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+
+        <span class="n">roles</span><span class="o">.</span><span class="na">putAll</span><span class="o">(</span><span class="n">uri</span><span class="o">.</span><span class="na">getRoles</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">timeZoneId</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">ZoneId</span><span class="o">.</span><span class="na">systemDefault</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">locale</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">Locale</span><span class="o">.</span><span class="na">getDefault</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+        <span class="n">sessionProperties</span><span class="o">.</span><span class="na">putAll</span><span class="o">(</span><span class="n">uri</span><span class="o">.</span><span class="na">getSessionProperties</span><span class="o">(</span><span class="o">)</span><span class="o">)</span><span class="o">;</span>
+    <span class="o">}</span>
+</code></pre></div><p>이렇게 로컬 시스템의 기본 timezone 설정을 통해 timezone이 세팅되기 때문에 유닉스 타임의 컬럼이더라도 자동으로 KST 시간으로 변경되어 검색이 된다.</p>
+<h2 id="어플리케이션에서-utc-기준의-시간으로-나타내려면">어플리케이션에서 UTC 기준의 시간으로 나타내려면?</h2>
+<p>prest-jdbc 에서는 PrestoConnection.setTimezone 메소드를 호출하여 Timezone을 설정할 수 있다.</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>[Airflow] Multi Server Cluster 환경에서 dag 파일은 모든 서버에 배포해야할까?</title>
